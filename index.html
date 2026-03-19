@@ -678,42 +678,123 @@ body {
   color: var(--muted);
   font-size: 12px;
 }
+
+.lock-screen {
+  position: fixed; inset: 0;
+  background: #0a0a0f;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+  flex-direction: column;
+  gap: 0;
+}
+.lock-screen.hidden { display: none; }
+.lock-box {
+  width: 360px;
+  background: #11111a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 36px 32px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.lock-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 22px;
+  color: #e8e6f0;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 4px;
+}
+.lock-logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #7c6fff; box-shadow: 0 0 12px #7c6fff; }
+.lock-subtitle { font-size: 13px; color: #6b6880; }
+.lock-input {
+  width: 100%;
+  background: #181824;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #e8e6f0;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  letter-spacing: 0.1em;
+  transition: border-color 0.15s;
+}
+.lock-input:focus { border-color: #7c6fff; }
+.lock-input.error { border-color: #ff4d6d; animation: shake 0.3s ease; }
+.lock-btn {
+  width: 100%;
+  background: #7c6fff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.lock-btn:hover { background: #6b5eee; }
+.lock-error { font-size: 12px; color: #ff4d6d; text-align: center; min-height: 16px; }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  75%{transform:translateX(6px)}
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
+
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-box">
+    <div>
+      <div class="lock-logo"><div class="lock-logo-dot"></div>SettingOS</div>
+      <div class="lock-subtitle">Accès réservé — Usage interne setter</div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:#6b6880;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Mot de passe</div>
+      <input class="lock-input" type="password" id="lock-input" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') window.unlock()">
+    </div>
+    <button class="lock-btn" onclick="window.unlock()">Accéder au CRM →</button>
+    <div class="lock-error" id="lock-error"></div>
+  </div>
+</div>
 
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="logo"><div class="logo-dot"></div>SettingOS</div>
 
   <div class="nav-section">
-    <div class="nav-label">CRM</div>
-    <div class="nav-item active" data-view="prospects" onclick="window.showView('prospects', this)">
-      <span class="nav-icon">👤</span> Prospects
-      <span class="nav-badge">47</span>
+    <div class="nav-label">Dashboard</div>
+    <div class="nav-item active" data-view="dashboard" onclick="window.showView('dashboard', this)">
+      <span class="nav-icon">📊</span> KPI & Stats
     </div>
+    <div class="nav-item" data-view="calls" onclick="window.showView('calls', this)">
+      <span class="nav-icon">📞</span> Calls iClosed
+      <span class="nav-badge">3</span>
+    </div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">CRM</div>
     <div class="nav-item" data-view="pipeline" onclick="window.showView('pipeline', this)">
       <span class="nav-icon">⚡</span> Pipeline
       <span class="nav-badge warn">8</span>
     </div>
-  </div>
-
-  <div class="nav-section" style="margin-top:8px">
-    <div class="nav-label">Setting</div>
-    <div class="nav-item" data-view="process" onclick="window.showView('process', this)">
-      <span class="nav-icon">📋</span> Process
-    </div>
-    <div class="nav-item" data-view="calls" onclick="window.showView('calls', this)">
-      <span class="nav-icon">📞</span> Calls bookés
-      <span class="nav-badge">3</span>
-    </div>
-    <div class="nav-item" data-view="commissions" onclick="window.showView('commissions', this)">
-      <span class="nav-icon">💰</span> Commissions
+    <div class="nav-item" data-view="prospects" onclick="window.showView('prospects', this)">
+      <span class="nav-icon">👤</span> Prospects
+      <span class="nav-badge" id="nav-badge-prospects">—</span>
     </div>
   </div>
 
   <div class="nav-section" style="margin-top:8px">
-    <div class="nav-label">Intelligence</div>
+    <div class="nav-label">Formation</div>
+    <div class="nav-item" data-view="formation" onclick="window.showView('formation', this)">
+      <span class="nav-icon">🎓</span> Process & Cours
+    </div>
     <div class="nav-item" data-view="contenu" onclick="window.showView('contenu', this)">
       <span class="nav-icon">💡</span> Contenu IA
     </div>
@@ -738,19 +819,136 @@ body {
       <span>🔍</span>
       <input type="text" placeholder="Rechercher un prospect...">
     </div>
-    <button class="btn btn-ghost" onclick="window.showFiche()">+ Ajouter via lien Insta</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('add-modal').classList.add('open')">+ Ajouter un prospect</button>
     <button class="btn btn-primary">↓ Importer</button>
   </div>
 
   <div class="content">
 
     <!-- ── VIEW: PROSPECTS ── -->
-    <div class="view active" id="view-prospects">
+    
+    <!-- ── VIEW: DASHBOARD ── -->
+    <div class="view active" id="view-dashboard">
+      <!-- Header KPI -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px">
+        <div class="stat-card" style="border-left:3px solid var(--accent)">
+          <div class="stat-label">Calls bookés</div>
+          <div class="stat-value" id="kpi-calls" style="color:var(--accent2)">—</div>
+          <div class="stat-sub">Ce mois · via iClosed</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid var(--accent3)">
+          <div class="stat-label">Taux réponse DMs</div>
+          <div class="stat-value" id="kpi-reponse" style="color:var(--accent3)">—</div>
+          <div class="stat-sub">Amorces envoyées</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid var(--success)">
+          <div class="stat-label">Conversion → call</div>
+          <div class="stat-value" id="kpi-conversion" style="color:var(--success)">—</div>
+          <div class="stat-sub">Prospects → call booké</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid var(--warn)">
+          <div class="stat-label">Objectif calls</div>
+          <div class="stat-value" id="kpi-objectif" style="color:var(--warn)">8</div>
+          <div class="stat-sub" id="kpi-objectif-sub">Ce mois · à ajuster</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid var(--accent)">
+          <div class="stat-label">Prospects actifs</div>
+          <div class="stat-value" id="kpi-prospects" style="color:var(--accent)">—</div>
+          <div class="stat-sub">Dans la pipeline</div>
+        </div>
+      </div>
+
+      <!-- Objectif progress -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Objectif mensuel</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Calls bookés via lien iClosed</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:var(--muted)">Objectif :</span>
+            <input type="number" id="objectif-input" value="8" min="1" max="50"
+              style="width:60px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 8px;color:var(--text);font-size:14px;font-family:'Syne',sans-serif;font-weight:700;text-align:center;outline:none"
+              oninput="window.updateObjectif(this.value)">
+            <span style="font-size:12px;color:var(--muted)">calls</span>
+          </div>
+        </div>
+        <div style="height:10px;background:var(--bg3);border-radius:6px;overflow:hidden;margin-bottom:8px">
+          <div id="objectif-bar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:37%;transition:width 0.4s ease"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span id="objectif-label" style="color:var(--muted)"><span id="kpi-calls-2" style="color:var(--text);font-weight:600">3</span> calls sur <span id="objectif-total">8</span></span>
+          <span id="objectif-pct" style="color:var(--accent);font-weight:600">37%</span>
+        </div>
+      </div>
+
+      <!-- Pipeline par étape + taux réponse -->
+      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px">
+        <!-- Pipeline breakdown -->
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px;margin-bottom:16px">Prospects par étape</div>
+          <div id="pipeline-breakdown" style="display:flex;flex-direction:column;gap:8px">
+            <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Chargement...</div>
+          </div>
+        </div>
+
+        <!-- Taux & perf -->
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;flex:1">
+            <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Entonnoir setting</div>
+            <div style="display:flex;flex-direction:column;gap:8px" id="funnel-stats">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:12px;color:var(--muted)">Nouveaux abonnés</span>
+                <span id="f-nouveau" style="font-family:'DM Mono',monospace;font-size:13px">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:12px;color:var(--muted)">→ Amorce envoyée</span>
+                <span id="f-amorce" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--accent3)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:12px;color:var(--muted)">→ Audit complété</span>
+                <span id="f-audit" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--warn)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:12px;color:var(--muted)">→ Qualifié</span>
+                <span id="f-qualif" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--success)">—</span>
+              </div>
+              <div style="border-top:1px solid var(--border);padding-top:8px;display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:12px;font-weight:500">→ Call booké</span>
+                <span id="f-booked" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--accent2);font-weight:600">—</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:rgba(124,111,255,0.07);border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius);padding:16px">
+            <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:6px">✦ Tip du jour IA</div>
+            <div id="ia-tip" style="font-size:12px;color:var(--muted);line-height:1.6">Tu as des prospects en étape "Audit envoyé" depuis plus de 2 jours sans réponse — relance-les avec le script calculateur variante A.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relances urgentes -->
+      <div style="background:var(--bg2);border:1px solid rgba(255,107,157,0.2);border-radius:var(--radius);padding:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px">⚡ Relances urgentes aujourd'hui</div>
+          <span id="urgent-count" style="background:rgba(255,107,157,0.15);color:var(--accent2);font-size:12px;padding:3px 12px;border-radius:20px;font-family:'DM Mono',monospace">—</span>
+        </div>
+        <div id="urgent-list" style="display:flex;flex-direction:column;gap:8px">
+          <div style="text-align:center;padding:16px;color:var(--muted);font-size:12px">Chargement des relances...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: CALLS iCLOSED ── -->
+    <div class="view" id="view-calls-new">
+      <!-- Cette view remplace l'ancienne view-calls -->
+    </div>
+
+<div class="view" id="view-prospects">
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-label">Total prospects</div>
-          <div class="stat-value">47</div>
-          <div class="stat-sub stat-up">↑ +6 cette semaine</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-sub stat-up">Chargement...</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Qualifiés IA</div>
@@ -759,12 +957,12 @@ body {
         </div>
         <div class="stat-card">
           <div class="stat-label">À relancer auj.</div>
-          <div class="stat-value" style="color:var(--warn)">8</div>
+          <div class="stat-value" id="stat-urgent" style="color:var(--warn)">—</div>
           <div class="stat-sub stat-down">⚠ Urgent</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Calls booked</div>
-          <div class="stat-value" style="color:var(--accent2)">3</div>
+          <div class="stat-value" id="stat-booked" style="color:var(--accent2)">—</div>
           <div class="stat-sub">Ce mois</div>
         </div>
         <div class="stat-card">
@@ -796,7 +994,7 @@ body {
             <th>Niche</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="prospects-tbody">
           <tr onclick="window.showFiche('sarah')">
             <td>
               <div class="prospect-info">
@@ -975,7 +1173,7 @@ body {
       <div class="kanban-board">
 
         <!-- 1. NOUVEAU -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-nouveau" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#7c6fff"></div>
             <div class="kanban-title" style="font-size:12px;">Nouveau</div>
@@ -1017,7 +1215,7 @@ body {
         </div>
 
         <!-- 2. AMORCE ENVOYÉE -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-amorce" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#00e5c0"></div>
             <div class="kanban-title" style="font-size:12px;">Amorce envoyée</div>
@@ -1056,7 +1254,7 @@ body {
         </div>
 
         <!-- 3. TRANSITION CALCULATEUR -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-calculateur" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#ffb84d"></div>
             <div class="kanban-title" style="font-size:12px;">Calculateur pitché</div>
@@ -1083,7 +1281,7 @@ body {
         </div>
 
         <!-- 4. AUDIT ENVOYÉ -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-audit" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#00e5a0"></div>
             <div class="kanban-title" style="font-size:12px;">Audit envoyé</div>
@@ -1122,7 +1320,7 @@ body {
         </div>
 
         <!-- 5. QUALIFICATION -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-qualification" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#7c6fff"></div>
             <div class="kanban-title" style="font-size:12px;">Qualification</div>
@@ -1149,7 +1347,7 @@ body {
         </div>
 
         <!-- 6. CTA ENVOYÉ -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-cta" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#ff6b9d"></div>
             <div class="kanban-title" style="font-size:12px;">CTA envoyé</div>
@@ -1176,7 +1374,7 @@ body {
         </div>
 
         <!-- 7. CALL BOOKÉ -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-call_booke" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#00e5a0"></div>
             <div class="kanban-title" style="font-size:12px;">Call booké ✓</div>
@@ -1202,7 +1400,7 @@ body {
         </div>
 
         <!-- 8. LOST -->
-        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+        <div class="kanban-col" id="kanban-col-lost" style="min-width:210px;max-width:210px;">
           <div class="kanban-header">
             <div class="kanban-dot" style="background:#ff4d6d"></div>
             <div class="kanban-title" style="font-size:12px;">Lost</div>
@@ -1386,75 +1584,282 @@ body {
       </div>
     </div>
 
-    <!-- ── VIEW: CALLS BOOKÉS ── -->
+            <!-- ── VIEW: FORMATION ── -->
+    <div class="view" id="view-formation">
+      <div style="max-width:860px">
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg,rgba(124,111,255,0.12),rgba(0,229,192,0.08));border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius);padding:24px;margin-bottom:20px">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;margin-bottom:6px">Formation Setting</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">Comprends le process en profondeur — pas juste exécuter, mais savoir <em>pourquoi</em> chaque étape fonctionne.</div>
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <span style="background:rgba(0,229,160,0.1);color:var(--success);font-size:11px;padding:3px 10px;border-radius:4px">5 modules</span>
+            <span style="background:rgba(124,111,255,0.1);color:var(--accent);font-size:11px;padding:3px 10px;border-radius:4px">Scripts inclus</span>
+            <span style="background:rgba(255,184,77,0.1);color:var(--warn);font-size:11px;padding:3px 10px;border-radius:4px">A/B testing</span>
+          </div>
+        </div>
+
+        <!-- Module 1 -->
+        <div class="timeline-card" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(124,111,255,0.15);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--accent);flex-shrink:0">1</div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">L'état d'esprit du setting</div>
+              <div style="font-size:12px;color:var(--muted)">Pourquoi tu n'es pas une vendeuse — tu es une qualificatrice</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;border-left:2px solid var(--accent);padding-left:14px">
+            Ton rôle n'est pas de convaincre. C'est de <strong style="color:var(--text)">trouver les bons profils</strong> et de les amener naturellement à vouloir parler à Anouck. La différence est fondamentale : quelqu'un qu'on convainc hésite sur la vente, quelqu'un qu'on qualifie vient en call avec l'envie d'y être.<br><br>
+            <strong style="color:var(--text)">Règle d'or :</strong> Si tu dois "pitcher" dur pour envoyer le lien iClosed, le prospect n'est pas prêt. Passe à l'étape nurturing, ne force jamais.
+          </div>
+          <div style="margin-top:14px;background:rgba(124,111,255,0.06);border-radius:var(--radius-sm);padding:12px;border:1px solid rgba(124,111,255,0.15)">
+            <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:6px">✦ À retenir</div>
+            <div style="font-size:12px;color:var(--muted)">Setting = Filtrage · Pas de closing · Pas de persuasion · Juste trouver ceux qui ont le problème, les moyens et la décision</div>
+          </div>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="timeline-card" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,229,192,0.1);border:1.5px solid var(--accent3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--accent3);flex-shrink:0">2</div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Le process en 5 étapes</div>
+              <div style="font-size:12px;color:var(--muted)">Amorce → Calculateur → Audit → Qualification → CTA</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="background:rgba(124,111,255,0.1);color:var(--accent);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600">ÉTAPE 1</span>
+                <span style="font-size:13px;font-weight:500">Amorce — briser la glace</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Une question simple sur leur activité. Pas de pitch. Objectif : obtenir une réponse et montrer qu'on s'intéresse vraiment à eux.</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="background:rgba(0,229,192,0.1);color:var(--accent3);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600">ÉTAPE 2</span>
+                <span style="font-size:13px;font-weight:500">Calculateur — créer la curiosité</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Tu introduis l'outil gratuit comme un service, pas comme un piège. Tu attends leur "oui" avant d'envoyer le lien — cette friction crée de la valeur perçue.</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="background:rgba(0,229,160,0.1);color:var(--success);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600">ÉTAPE 3</span>
+                <span style="font-size:13px;font-weight:500">Audit — laisser l'outil travailler</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Le lien est envoyé. Tu ne relances pas toutes les 5 minutes. Tu attends le résultat. Si pas de réponse dans 24h, relance douce.</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="background:rgba(124,111,255,0.1);color:var(--accent);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600">ÉTAPE 4</span>
+                <span style="font-size:13px;font-weight:500">Qualification — les 2 questions clés</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">"Combien de calls de vente par mois ?" + "D'où viennent tes meilleurs clients ?". Ces 2 questions révèlent si le prospect gère son business aux chiffres ou à l'instinct — info critique pour Anouck.</div>
+            </div>
+            <div style="background:rgba(255,107,157,0.06);border:1px solid rgba(255,107,157,0.2);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="background:rgba(255,107,157,0.1);color:var(--accent2);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600">ÉTAPE 5</span>
+                <span style="font-size:13px;font-weight:500">CTA — uniquement si profil qualifié</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Tu envoies le lien iClosed <strong style="color:var(--text)">seulement</strong> si : offre high-ticket possible, décideur confirmé, problème clairement exprimé. Sinon → nurturing.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 3 -->
+        <div class="timeline-card" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,184,77,0.1);border:1.5px solid var(--warn);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--warn);flex-shrink:0">3</div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Gérer les objections</div>
+              <div style="font-size:12px;color:var(--muted)">Les 4 objections les plus fréquentes et comment y répondre</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent2);margin-bottom:4px">"C'est pas le bon moment"</div>
+              <div style="font-size:12px;color:var(--muted)">→ "Je comprends ! Justement, l'appel avec Anouck c'est pour clarifier exactement quand et comment — ça prend 30 min et tu repars avec un plan concret."</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent2);margin-bottom:4px">"C'est quoi exactement cet appel ?"</div>
+              <div style="font-size:12px;color:var(--muted)">→ "C'est un diagnostic stratégique gratuit avec Anouck — elle analyse ta situation et te donne un plan d'action personnalisé, sans engagement."</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent2);margin-bottom:4px">"J'ai besoin d'y réfléchir"</div>
+              <div style="font-size:12px;color:var(--muted)">→ Pas de pression. "Bien sûr ! Je te recontacte dans quelques jours." → relance J+5 avec un angle différent (social proof ou résultat client).</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent2);margin-bottom:4px">"J'ai déjà essayé ce genre de choses"</div>
+              <div style="font-size:12px;color:var(--muted)">→ "Je comprends la méfiance — ce que fait Anouck c'est vraiment différent parce que [différenciateur]. L'appel te permet de voir concrètement si c'est adapté à toi."</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 4 - Relances -->
+        <div class="timeline-card" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,107,157,0.1);border:1.5px solid var(--accent2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--accent2);flex-shrink:0">4</div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Le timing des relances</div>
+              <div style="font-size:12px;color:var(--muted)">J1 → J7 intensif · puis J+5 · puis J+10</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:12px">
+            Une relance trop rapide = pression. Trop tard = prospect froid. Le rythme est calibré pour rester dans leur esprit sans les saouler.
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--accent);font-weight:600">J1-J7</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">Relances quotidiennes si silence · changer d'angle à chaque fois</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--warn);font-weight:600">J+5</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">Après 1 semaine · angle social proof · win client récent</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--accent2);font-weight:600">J+10</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">Dernière relance · message direct · si pas de réponse → nurturing passif</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);font-weight:600">Lost ?</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">Pas lost pour toujours · réactiver dans 30j avec nouveau contenu</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 5 - A/B Testing -->
+        <div class="timeline-card" style="padding:20px;background:var(--bg2);border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(124,111,255,0.15);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;color:var(--accent);flex-shrink:0">5</div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">A/B Testing des scripts</div>
+              <div style="font-size:12px;color:var(--muted)">Comment on optimise ensemble semaine par semaine</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:12px">
+            Chaque semaine, l'IA sélectionne automatiquement un groupe de prospects similaires. On teste 2 variantes d'un même message. La semaine suivante, on adopte la gagnante et on lance un nouveau test. <strong style="color:var(--text)">C'est comme ça qu'on passe de 18% à 35% de taux de conversion.</strong>
+          </div>
+          <div style="background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.15);border-radius:var(--radius-sm);padding:14px">
+            <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:6px">✦ Ce que tu fais concrètement</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.7">
+              1. Utilise toujours la variante A indiquée dans la pipeline<br>
+              2. Note si le prospect a répondu ou pas dans la fiche<br>
+              3. Chaque vendredi on regarde ensemble les résultats et on ajuste<br>
+              4. Jamais d'improvisation — si tu veux essayer un nouveau script, on l'ajoute en test officiel
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+<!-- ── VIEW: CALLS BOOKÉS ── -->
     <div class="view" id="view-calls">
-      <div class="stats-row" style="grid-template-columns:repeat(3,1fr)">
+      <!-- iClosed embed banner -->
+      <div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius);padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:13px;font-weight:500;color:var(--success)">✓ iClosed connecté</span>
+        <span style="font-size:12px;color:var(--muted)">Calls via : app.iclosed.io/e/salesperf/diagnostic-sales-perf-1</span>
+        <a href="https://app.iclosed.io/e/salesperf/diagnostic-sales-perf-1" target="_blank"
+          style="margin-left:auto;background:var(--accent);color:#fff;border-radius:var(--radius-sm);padding:6px 14px;font-size:12px;font-weight:500;text-decoration:none">
+          Ouvrir iClosed ↗
+        </a>
+      </div>
+
+      <!-- Stats calls -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
         <div class="stat-card">
-          <div class="stat-label">Calls cette semaine</div>
-          <div class="stat-value" style="color:var(--accent2)">3</div>
-          <div class="stat-sub">liés à ton lien iClosed</div>
+          <div class="stat-label">Calls ce mois</div>
+          <div class="stat-value" style="color:var(--accent2)" id="calls-total">3</div>
+          <div class="stat-sub">via lien iClosed</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Taux show-up</div>
+          <div class="stat-label">Show-up rate</div>
           <div class="stat-value" style="color:var(--success)">100%</div>
           <div class="stat-sub">3/3 présents</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Taux closing</div>
-          <div class="stat-value" style="color:var(--accent)">—</div>
-          <div class="stat-sub">En attente résultats</div>
+          <div class="stat-label">À venir cette semaine</div>
+          <div class="stat-value" style="color:var(--accent)">2</div>
+          <div class="stat-sub">Prochains calls</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fermés ce mois</div>
+          <div class="stat-value" style="color:var(--warn)">—</div>
+          <div class="stat-sub">Résultat closer</div>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <!-- Call 1 -->
-        <div style="background:var(--bg2);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius);padding:20px;display:flex;gap:20px;align-items:flex-start">
-          <div style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:80px">
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Aujourd'hui</div>
-            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--success)">14h00</div>
-          </div>
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-              <div style="font-weight:600;font-size:15px">Alex Tran</div>
-              <span class="badge badge-booked">Call booké</span>
-              <span style="font-size:12px;color:var(--muted);margin-left:auto">@alextran.entrepreneur</span>
+
+      <!-- Liste calls avec actions -->
+      <div style="display:flex;flex-direction:column;gap:12px" id="calls-list">
+
+        <!-- Call 1 - Aujourd'hui -->
+        <div style="background:var(--bg2);border:1px solid rgba(0,229,160,0.25);border-radius:var(--radius);padding:20px">
+          <div style="display:flex;gap:16px;align-items:flex-start">
+            <div style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:80px;flex-shrink:0">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Aujourd'hui</div>
+              <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--success)">14h00</div>
             </div>
-            <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px">
-              <strong style="color:var(--text)">Récap IA :</strong> E-commerce 7 chiffres. Bloqué sur la scalabilité. Cherche un accompagnement structuré. A déjà essayé seul, résultats insuffisants. Très motivé. Budget non évoqué mais CA indique la capacité. <strong style="color:var(--accent2)">Profil : chaud ⚡</strong>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button class="btn btn-primary" style="font-size:12px;padding:6px 14px">📞 Appeler</button>
-              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📋 Voir fiche</button>
-              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">✅ Checklist</button>
-              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;margin-left:auto;color:var(--success)">→ Fermé</button>
-              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;color:var(--danger)">✗ No show</button>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                <div style="font-weight:600;font-size:15px">Alex Tran</div>
+                <span class="badge badge-booked">Call booké</span>
+                <span style="font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 8px;border-radius:4px">Score 91/100</span>
+                <span style="font-size:12px;color:var(--muted);margin-left:auto">@alextran.entrepreneur</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.7;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border);margin-bottom:12px">
+                <strong style="color:var(--text)">Récap IA :</strong> E-commerce 7 chiffres. Bloqué sur la scalabilité. Cherche un accompagnement structuré. Très motivé. <strong style="color:var(--accent2)">Profil chaud ⚡</strong>
+              </div>
+              <!-- Checklist setting -->
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px">
+                <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Checklist setting validée</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 8px;border-radius:4px">✓ Qualifié</span>
+                  <span style="font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 8px;border-radius:4px">✓ Douleur identifiée</span>
+                  <span style="font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 8px;border-radius:4px">✓ Décideur confirmé</span>
+                  <span style="font-size:11px;background:rgba(255,184,77,0.1);color:var(--warn);padding:2px 8px;border-radius:4px">⚡ Budget à confirmer</span>
+                  <span style="font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 8px;border-radius:4px">✓ Call confirmé</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <a href="https://app.iclosed.io/e/salesperf/diagnostic-sales-perf-1" target="_blank"
+                  class="btn btn-primary" style="font-size:12px;padding:6px 16px;text-decoration:none">📞 Voir dans iClosed</a>
+                <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="window.showFiche()">📋 Fiche prospect</button>
+                <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="window.moveToStep('call_booke','ferme')">✅ Fermé</button>
+                <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;color:var(--danger)" onclick="window.moveToStep('call_booke','noshow')">✗ No show</button>
+              </div>
             </div>
           </div>
         </div>
+
         <!-- Call 2 -->
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;gap:20px;align-items:flex-start">
-          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:80px">
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">26 juin</div>
-            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text)">10h30</div>
-          </div>
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-              <div style="font-weight:600;font-size:15px">Sarah Lambert</div>
-              <span class="badge badge-booked">Call booké</span>
-              <span style="font-size:12px;color:var(--muted);margin-left:auto">@sarahlambert.coach</span>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="display:flex;gap:16px;align-items:flex-start">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:80px;flex-shrink:0">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">26 mars</div>
+              <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700">10h30</div>
             </div>
-            <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px">
-              <strong style="color:var(--text)">Récap IA :</strong> Coach féminin 31k abonnés. Veut passer au palier supérieur avec un système de vente. Prête à investir. Décideuse.
-            </div>
-            <div style="display:flex;gap:8px">
-              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📋 Voir fiche</button>
-              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📝 Notes</button>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                <div style="font-weight:600;font-size:15px">Sarah Lambert</div>
+                <span class="badge badge-booked">Call booké</span>
+                <span style="font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 8px;border-radius:4px">Score 88/100</span>
+                <span style="font-size:12px;color:var(--muted);margin-left:auto">@sarahlambert.coach</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.7;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border);margin-bottom:12px">
+                <strong style="color:var(--text)">Récap IA :</strong> Coach féminin 31k abonnés. Veut scaler. Décideuse. Acquisition "le bordel" selon ses mots. Prête à investir.
+              </div>
+              <div style="display:flex;gap:8px">
+                <a href="https://app.iclosed.io/e/salesperf/diagnostic-sales-perf-1" target="_blank"
+                  class="btn btn-primary" style="font-size:12px;padding:6px 16px;text-decoration:none">📞 Voir dans iClosed</a>
+                <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📝 Ajouter notes</button>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
-    <!-- ── VIEW: COMMISSIONS ── -->
+<!-- ── VIEW: COMMISSIONS ── -->
     <div class="view" id="view-commissions">
       <div class="commission-grid">
         <div class="comm-card">
@@ -1883,7 +2288,7 @@ body {
         <div class="fiche-handle">@sarahlambert.coach · Coaching féminin</div>
         <div style="margin-top:6px;display:flex;gap:6px">
           <span class="badge badge-qualified">Qualifié</span>
-          <span style="background:rgba(0,229,160,0.1);color:var(--success);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500">Score 88/100</span>
+          <span style="background:rgba(0,229,160,0.1);color:var(--success);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500"><span class="fiche-score-badge">Score —/100</span></span>
           <span class="tag tag-audit">Audit optin</span>
         </div>
       </div>
@@ -2061,6 +2466,367 @@ body {
 </div>
 
 <script>
+
+// ── PASSWORD LOCK ──
+(function() {
+  var PWD = 'settingos2025';
+  var SESSION_KEY = 'sos_auth';
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    var ls = document.getElementById('lock-screen');
+    if (ls) ls.classList.add('hidden');
+  }
+  window.unlock = function() {
+    var input = document.getElementById('lock-input');
+    var err = document.getElementById('lock-error');
+    if (!input) return;
+    if (input.value === PWD) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      var ls = document.getElementById('lock-screen');
+      if (ls) ls.classList.add('hidden');
+      err.textContent = '';
+    } else {
+      input.classList.add('error');
+      err.textContent = 'Mot de passe incorrect';
+      input.value = '';
+      setTimeout(function() { input.classList.remove('error'); }, 400);
+    }
+  };
+})();
+
+
+// ── SUPABASE CONFIG ──
+const SUPA_URL = 'https://cqjipiqnkqxvptwvuegl.supabase.co';
+const SUPA_KEY = 'sb_publishable_GrA7rfMgZimEnxgbQAh-AQ_R8BQMHUR';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── DATA LAYER ──
+const DB = {
+  async getProspects() {
+    const { data, error } = await db.from('prospects').select('*').order('created_at', { ascending: false });
+    if (error) { console.error('getProspects:', error); return []; }
+    return data || [];
+  },
+  async upsertProspect(prospect) {
+    const { data, error } = await db.from('prospects').upsert(prospect, { onConflict: 'instagram_handle' }).select();
+    if (error) { console.error('upsertProspect:', error); return null; }
+    return data?.[0];
+  },
+  async updateProspect(id, updates) {
+    const { data, error } = await db.from('prospects').update(updates).eq('id', id).select();
+    if (error) { console.error('updateProspect:', error); return null; }
+    return data?.[0];
+  },
+  async updatePipelineStep(id, step) {
+    return await DB.updateProspect(id, { pipeline_step: step, updated_at: new Date().toISOString() });
+  },
+  async logMessage(prospect_id, direction, content) {
+    const { error } = await db.from('messages').insert({ prospect_id, direction, content, sent_at: new Date().toISOString() });
+    if (error) console.error('logMessage:', error);
+  },
+  async getMessages(prospect_id) {
+    const { data, error } = await db.from('messages').select('*').eq('prospect_id', prospect_id).order('sent_at');
+    if (error) { console.error('getMessages:', error); return []; }
+    return data || [];
+  }
+};
+
+// ── RENDER HELPERS ──
+function scoreClass(s) { return s >= 70 ? 'high' : s >= 45 ? 'med' : 'low'; }
+function badgeClass(step) {
+  const map = { 'nouveau':'badge-new','amorce':'badge-contact','calculateur':'badge-contact','audit':'badge-contact','qualification':'badge-nurture','cta':'badge-nurture','call_booke':'badge-booked','lost':'badge-lost' };
+  return map[step] || 'badge-new';
+}
+function badgeLabel(step) {
+  const map = { 'nouveau':'Nouveau','amorce':'Amorce envoyée','calculateur':'Calculateur','audit':'Audit envoyé','qualification':'Qualification','cta':'CTA envoyé','call_booke':'Call booké','lost':'Lost' };
+  return map[step] || step;
+}
+function relanceLabel(p) {
+  if (!p.next_relance) return '';
+  const d = new Date(p.next_relance);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.round((d - today) / 86400000);
+  if (diff < 0) return '<span class="relance-tag urgent">⚡ En retard</span>';
+  if (diff === 0) return '<span class="relance-tag urgent">⚡ Aujourd'hui</span>';
+  if (diff === 1) return '<span class="relance-tag soon">📅 Demain</span>';
+  return '<span class="relance-tag">📅 J+' + diff + '</span>';
+}
+function initials(name) {
+  if (!name) return '??';
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+}
+function avatarGrad(i) {
+  const grads = ['linear-gradient(135deg,#7c6fff,#ff6b9d)','linear-gradient(135deg,#00e5c0,#7c6fff)','linear-gradient(135deg,#ffb84d,#ff6b9d)','linear-gradient(135deg,#00e5a0,#7c6fff)','linear-gradient(135deg,#ff6b9d,#ffb84d)','linear-gradient(135deg,#7c6fff,#00e5c0)'];
+  return grads[i % grads.length];
+}
+
+// ── LOAD & RENDER PROSPECTS TABLE ──
+async function loadProspects() {
+  const prospects = await DB.getProspects();
+  const tbody = document.querySelector('#prospects-tbody');
+  if (!tbody) return;
+  // Update stats
+  const badge = document.querySelector('.nav-badge');
+  if (badge) badge.textContent = prospects.length;
+  const statTotal = document.getElementById('stat-total');
+  if (statTotal) statTotal.textContent = prospects.length;
+  const urgent = prospects.filter(p => {
+    if (!p.next_relance) return false;
+    const d = new Date(p.next_relance); const t = new Date(); t.setHours(0,0,0,0);
+    return d <= t;
+  });
+  const statUrgent = document.getElementById('stat-urgent');
+  if (statUrgent) statUrgent.textContent = urgent.length;
+  const booked = prospects.filter(p => p.pipeline_step === 'call_booke');
+  const statBooked = document.getElementById('stat-booked');
+  if (statBooked) statBooked.textContent = booked.length;
+
+  if (prospects.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Aucun prospect — les fiches créées via Manychat apparaîtront ici automatiquement</td></tr>';
+    return;
+  }
+  tbody.innerHTML = prospects.map((p, i) => `
+    <tr onclick="window.openFiche('${p.id}')">
+      <td><div class="prospect-info">
+        <div class="prospect-avatar" style="background:${avatarGrad(i)}">${initials(p.full_name)}</div>
+        <div><div class="prospect-name">${p.full_name || 'Sans nom'}</div>
+        <div class="prospect-handle">${p.instagram_handle || ''}</div></div>
+      </div></td>
+      <td><span class="tag tag-${p.source === 'audit' ? 'audit' : p.source === 'instagram' ? 'insta' : 'manual'}">${p.source || 'manuel'}</span></td>
+      <td><span class="badge ${badgeClass(p.pipeline_step)}">${badgeLabel(p.pipeline_step)}</span></td>
+      <td><div class="score-bar"><div class="score-track"><div class="score-fill ${scoreClass(p.ia_score||0)}" style="width:${p.ia_score||0}%"></div></div><span class="score-num">${p.ia_score||'—'}</span></div></td>
+      <td>${relanceLabel(p)}</td>
+      <td style="color:var(--muted);font-size:12px">${p.niche || '—'}</td>
+    </tr>`).join('');
+}
+
+// ── LOAD PIPELINE KANBAN ──
+async function loadPipeline() {
+  const prospects = await DB.getProspects();
+  const steps = ['nouveau','amorce','calculateur','audit','qualification','cta','call_booke','lost'];
+  steps.forEach(step => {
+    const col = document.getElementById('kanban-col-' + step);
+    if (!col) return;
+    const cards = col.querySelector('.kanban-cards');
+    const count = col.querySelector('.kanban-count');
+    const ps = prospects.filter(p => (p.pipeline_step || 'nouveau') === step);
+    if (count) count.textContent = ps.length;
+    if (!cards) return;
+    if (ps.length === 0) { cards.innerHTML = '<div style="padding:12px;text-align:center;font-size:11px;color:var(--muted)">Vide</div>'; return; }
+    cards.innerHTML = ps.map((p,i) => `
+      <div class="kanban-card" onclick="window.openFiche('${p.id}')">
+        <div class="kcard-top">
+          <div class="kcard-avatar" style="background:${avatarGrad(i)}">${initials(p.full_name)}</div>
+          <div><div class="kcard-name">${p.full_name || 'Sans nom'}</div>
+          <div class="kcard-handle">${p.instagram_handle || ''}</div></div>
+        </div>
+        <div class="kcard-niche">${p.niche || '—'} ${p.followers ? '· ' + Number(p.followers).toLocaleString() : ''}</div>
+        <div class="kcard-footer">${relanceLabel(p)}<span class="kcard-score-mini ${scoreClass(p.ia_score||0)}">${p.ia_score||'—'}/100</span></div>
+      </div>`).join('');
+  });
+}
+
+// ── OPEN FICHE ──
+window.openFiche = async function(id) {
+  const { data: p } = await db.from('prospects').select('*').eq('id', id).single();
+  if (!p) return;
+  document.getElementById('fiche-overlay').classList.add('open');
+  document.querySelector('.fiche-avatar').textContent = initials(p.full_name);
+  document.querySelector('.fiche-name').textContent = p.full_name || 'Sans nom';
+  document.querySelector('.fiche-handle').textContent = (p.instagram_handle || '') + ' · ' + (p.niche || '');
+  // Score badge
+  const scoreBadge = document.querySelector('.fiche-score-badge');
+  if (scoreBadge) scoreBadge.textContent = 'Score ' + (p.ia_score||'—') + '/100';
+  // Infos tab
+  const infoHtml = `
+    <div class="fiche-section">
+      <div class="fiche-section-title">Coordonnées</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Instagram</div><div class="info-value"><a href="https://instagram.com/${(p.instagram_handle||'').replace('@','')}" target="_blank">${p.instagram_handle||'—'}</a></div></div>
+        <div class="info-item"><div class="info-label">Email</div><div class="info-value" style="font-size:12px">${p.email||'—'}</div></div>
+        <div class="info-item"><div class="info-label">Téléphone</div><div class="info-value">${p.phone||'—'}</div></div>
+        <div class="info-item"><div class="info-label">Abonnés</div><div class="info-value">${p.followers ? Number(p.followers).toLocaleString() : '—'}</div></div>
+      </div>
+    </div>
+    <div class="fiche-section">
+      <div class="fiche-section-title">Bio Instagram</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--muted);line-height:1.6">${p.bio||'—'}</div>
+    </div>
+    <div class="fiche-section">
+      <div class="fiche-section-title">Analyse IA</div>
+      <div class="ia-analysis">
+        <div class="ia-label">✦ Score cible</div>
+        <div class="ia-score"><span style="font-size:12px;color:var(--muted)">Correspondance avatar</span><div class="ia-score-bar"><div class="ia-score-fill" style="width:${p.ia_score||0}%"></div></div><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">${p.ia_score||0}%</span></div>
+        <div class="ia-text">${p.ia_analysis||'Analyse en attente...'}</div>
+      </div>
+    </div>
+    <div class="fiche-section">
+      <div class="fiche-section-title">Étape pipeline</div>
+      <select onchange="window.moveProspect('${p.id}', this.value)" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-size:13px;width:100%;font-family:'DM Sans',sans-serif">
+        ${['nouveau','amorce','calculateur','audit','qualification','cta','call_booke','lost'].map(s => `<option value="${s}" ${p.pipeline_step===s?'selected':''}>${badgeLabel(s)}</option>`).join('')}
+      </select>
+    </div>`;
+  document.getElementById('tab-infos').innerHTML = infoHtml;
+};
+
+window.moveProspect = async function(id, step) {
+  await DB.updatePipelineStep(id, step);
+  await loadPipeline();
+  await loadProspects();
+};
+
+
+// ── DASHBOARD KPI ──
+window.updateObjectif = function(val) {
+  const v = parseInt(val) || 8;
+  const calls = parseInt(document.getElementById('kpi-calls')?.textContent) || 0;
+  const pct = Math.min(100, Math.round((calls / v) * 100));
+  const bar = document.getElementById('objectif-bar');
+  if (bar) bar.style.width = pct + '%';
+  const lbl = document.getElementById('objectif-pct');
+  if (lbl) lbl.textContent = pct + '%';
+  const tot = document.getElementById('objectif-total');
+  if (tot) tot.textContent = v;
+  document.getElementById('kpi-objectif').textContent = v;
+};
+
+window.moveToStep = function(from, to) {
+  console.log('Moving from', from, 'to', to);
+};
+
+async function loadDashboard() {
+  const prospects = await DB.getProspects();
+  const total = prospects.length;
+  const steps = {};
+  prospects.forEach(p => {
+    const s = p.pipeline_step || 'nouveau';
+    steps[s] = (steps[s] || 0) + 1;
+  });
+
+  // Update nav badge
+  const navBadge = document.getElementById('nav-badge-prospects');
+  if (navBadge) navBadge.textContent = total;
+
+  // KPI cards
+  const booked = steps['call_booke'] || 0;
+  const amorces = (steps['amorce'] || 0) + (steps['calculateur'] || 0) + (steps['audit'] || 0) + (steps['qualification'] || 0) + (steps['cta'] || 0) + booked;
+  const reponse = amorces > 0 ? Math.round((amorces / Math.max(total,1)) * 100) : 0;
+  const conversion = total > 0 ? Math.round((booked / total) * 100) : 0;
+
+  const el = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+  el('kpi-calls', booked);
+  el('kpi-calls-2', booked);
+  el('kpi-reponse', reponse + '%');
+  el('kpi-conversion', conversion + '%');
+  el('kpi-prospects', total);
+
+  // Objectif bar
+  const objectif = parseInt(document.getElementById('objectif-input')?.value) || 8;
+  const pct = Math.min(100, Math.round((booked / objectif) * 100));
+  const bar = document.getElementById('objectif-bar');
+  if (bar) bar.style.width = pct + '%';
+  el('objectif-pct', pct + '%');
+  el('objectif-total', objectif);
+  el('kpi-objectif-sub', `${booked} sur ${objectif} · ${pct}%`);
+
+  // Pipeline breakdown
+  const stepLabels = { nouveau:'Nouveau', amorce:'Amorce envoyée', calculateur:'Calculateur', audit:'Audit envoyé', qualification:'Qualification', cta:'CTA envoyé', call_booke:'Call booké', lost:'Lost' };
+  const stepColors = { nouveau:'var(--accent)', amorce:'var(--accent3)', calculateur:'var(--accent3)', audit:'var(--success)', qualification:'var(--accent)', cta:'var(--accent2)', call_booke:'var(--accent2)', lost:'var(--danger)' };
+  const breakdown = document.getElementById('pipeline-breakdown');
+  if (breakdown && total > 0) {
+    breakdown.innerHTML = Object.entries(stepLabels).map(([k, label]) => {
+      const count = steps[k] || 0;
+      const w = Math.round((count / total) * 100);
+      return `<div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span style="font-size:12px;color:var(--muted)">${label}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:12px;color:${stepColors[k]}">${count}</span>
+        </div>
+        <div style="height:5px;background:var(--bg3);border-radius:3px;overflow:hidden">
+          <div style="width:${w}%;height:100%;background:${stepColors[k]};border-radius:3px;transition:width 0.4s"></div>
+        </div>
+      </div>`;
+    }).join('');
+  } else if (breakdown) {
+    breakdown.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Aucun prospect — ajoute ta première fiche</div>';
+  }
+
+  // Funnel stats
+  el('f-nouveau', steps['nouveau'] || 0);
+  el('f-amorce', (steps['amorce'] || 0) + (steps['calculateur'] || 0));
+  el('f-audit', steps['audit'] || 0);
+  el('f-qualif', steps['qualification'] || 0);
+  el('f-booked', booked);
+
+  // Urgent relances
+  const today = new Date(); today.setHours(23,59,59,0);
+  const urgent = prospects.filter(p => p.next_relance && new Date(p.next_relance) <= today && p.pipeline_step !== 'lost' && p.pipeline_step !== 'call_booke');
+  const urgentCount = document.getElementById('urgent-count');
+  if (urgentCount) urgentCount.textContent = urgent.length + ' à faire';
+  const urgentList = document.getElementById('urgent-list');
+  if (urgentList) {
+    if (urgent.length === 0) {
+      urgentList.innerHTML = '<div style="text-align:center;padding:16px;color:var(--success);font-size:13px">✓ Aucune relance urgente — beau travail !</div>';
+    } else {
+      urgentList.innerHTML = urgent.slice(0,5).map((p,i) => `
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg3);border:1px solid rgba(255,107,157,0.15);border-radius:var(--radius-sm)">
+          <div style="width:32px;height:32px;border-radius:50%;background:${avatarGrad(i)};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0">${initials(p.full_name)}</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500">${p.full_name || 'Sans nom'}</div>
+            <div style="font-size:11px;color:var(--muted)">${p.instagram_handle || ''} · ${badgeLabel(p.pipeline_step)}</div>
+          </div>
+          <button onclick="window.openFiche('${p.id}')" style="background:rgba(255,107,157,0.1);color:var(--accent2);border:none;border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Relancer →</button>
+        </div>`).join('');
+    }
+  }
+}
+
+// ── MANYCHAT WEBHOOK HANDLER ──
+// Supabase Edge Function URL pour recevoir les webhooks Manychat
+// Le CRM écoute les changements en temps réel
+db.channel('prospects-changes')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'prospects' }, () => {
+    loadProspects();
+    loadPipeline();
+  })
+  .subscribe();
+
+// ── ADD PROSPECT FORM ──
+window.addProspect = async function() { window.addProspectFull(); };
+window.addProspectFull = async function() {
+  const handle = document.getElementById('new-handle')?.value?.trim();
+  if (!handle) { document.getElementById('new-handle').style.borderColor='var(--danger)'; return; }
+  const prospect = {
+    instagram_handle: handle.startsWith('@') ? handle : '@' + handle,
+    full_name: document.getElementById('new-name')?.value?.trim() || null,
+    niche: document.getElementById('new-niche')?.value?.trim() || null,
+    source: document.getElementById('new-source')?.value || 'manuel',
+    pipeline_step: 'nouveau',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    next_relance: new Date(Date.now() + 86400000).toISOString()
+  };
+  const result = await DB.upsertProspect(prospect);
+  document.getElementById('add-modal')?.classList.remove('open');
+  document.getElementById('new-handle').value = '';
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-niche').value = '';
+  await loadProspects();
+  await loadPipeline();
+};
+
+// ── INIT ON LOAD ──
+document.addEventListener('DOMContentLoaded', async function() {
+  // Nav
+  document.querySelectorAll('.nav-item[data-view]').forEach(function(item) {
+    item.addEventListener('click', function() { window.showView(this.dataset.view, this); });
+  });
+  // Load data
+  await loadProspects();
+  await loadPipeline();
+  await loadDashboard();
+});
+
+
 window.showView = function(id, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -2250,5 +3016,41 @@ document.querySelectorAll('.filter-pill').forEach(pill => {
   });
 });
 </script>
+
+<!-- ADD PROSPECT MODAL -->
+<div id="add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('open')">
+<style>#add-modal.open{display:flex!important}</style>
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);width:440px;padding:24px;">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:6px">Ajouter un prospect</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px">La fiche sera créée et synchronisée avec Supabase</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Handle Instagram *</div>
+        <input id="new-handle" type="text" placeholder="@exemple.coach" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Nom complet</div>
+        <input id="new-name" type="text" placeholder="Sarah Lambert" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Niche</div>
+          <input id="new-niche" type="text" placeholder="Coaching, fitness..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Source</div>
+          <select id="new-source" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+            <option value="manuel">Manuel</option>
+            <option value="instagram">Instagram</option>
+            <option value="audit">Audit optin</option>
+            <option value="manychat">Manychat</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="window.addProspectFull()" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;margin-top:4px">Créer la fiche</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
