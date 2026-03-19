@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SettingOS — CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #11111a;
+  --bg3: #181824;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8e6f0;
+  --muted: #6b6880;
+  --accent: #7c6fff;
+  --accent2: #ff6b9d;
+  --accent3: #00e5c0;
+  --accent4: #ffb84d;
+  --danger: #ff4d6d;
+  --success: #00e5a0;
+  --warn: #ffb84d;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+.logo {
+  padding: 0 20px 24px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-dot { width:8px; height:8px; border-radius:50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.nav-section { padding: 0 12px; margin-bottom: 6px; }
+.nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 400;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active {
+  background: rgba(124,111,255,0.12);
+  color: var(--accent);
+  border-color: rgba(124,111,255,0.2);
+}
+.nav-icon { font-size: 15px; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  padding: 1px 6px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.nav-badge.warn { background: var(--warn); color: #000; }
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+.setter-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.setter-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+.setter-name { font-size: 13px; font-weight: 500; }
+.setter-role { font-size: 11px; color: var(--muted); }
+
+/* ── MAIN ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.topbar {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg2);
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  flex: 1;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  width: 260px;
+}
+.search-box input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  width: 100%;
+}
+.search-box input::placeholder { color: var(--muted); }
+.btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #6b5eee; }
+.btn-ghost { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--border2); }
+
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.stat-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.stat-up { color: var(--success); }
+.stat-down { color: var(--danger); }
+
+/* ── FILTERS ── */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.filter-pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.filter-pill:hover { border-color: var(--border2); color: var(--text); }
+.filter-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── PROSPECT TABLE ── */
+.prospect-table { width: 100%; border-collapse: collapse; }
+.prospect-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.prospect-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.prospect-table tr:hover td { background: rgba(255,255,255,0.02); cursor: pointer; }
+.prospect-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; color: #fff;
+  flex-shrink: 0;
+}
+.prospect-info { display: flex; align-items: center; gap: 10px; }
+.prospect-name { font-weight: 500; font-size: 14px; }
+.prospect-handle { font-size: 12px; color: var(--accent); }
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.badge-new { background: rgba(124,111,255,0.15); color: var(--accent); }
+.badge-contact { background: rgba(0,229,192,0.12); color: var(--accent3); }
+.badge-nurture { background: rgba(255,184,77,0.15); color: var(--warn); }
+.badge-qualified { background: rgba(0,229,160,0.15); color: var(--success); }
+.badge-booked { background: rgba(255,107,157,0.15); color: var(--accent2); }
+.badge-lost { background: rgba(255,77,109,0.12); color: var(--danger); }
+.score-bar {
+  display: flex; align-items: center; gap: 8px;
+}
+.score-track {
+  width: 60px; height: 4px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-fill { height: 100%; border-radius: 4px; }
+.score-fill.high { background: var(--success); }
+.score-fill.med { background: var(--warn); }
+.score-fill.low { background: var(--danger); }
+.score-num { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted); }
+
+.relance-tag {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+}
+.relance-tag.urgent { color: var(--accent2); }
+.relance-tag.soon { color: var(--warn); }
+
+/* ── KANBAN ── */
+.kanban-board {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  height: calc(100vh - 220px);
+}
+.kanban-col {
+  min-width: 240px;
+  max-width: 240px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.kanban-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kanban-dot { width: 8px; height: 8px; border-radius: 50%; }
+.kanban-title { font-weight: 600; font-size: 13px; flex: 1; }
+.kanban-count {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 1px 7px;
+  border-radius: 20px;
+  color: var(--muted);
+}
+.kanban-cards { padding: 10px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.kanban-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.kanban-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+.kcard-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.kcard-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: #fff;
+  flex-shrink: 0;
+}
+.kcard-name { font-size: 13px; font-weight: 500; }
+.kcard-handle { font-size: 11px; color: var(--accent); }
+.kcard-niche { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.kcard-footer { display: flex; align-items: center; justify-content: space-between; }
+.kcard-relance {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+}
+.kcard-relance.urgent { color: var(--accent2); }
+.kcard-score-mini {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(0,229,160,0.12);
+  color: var(--success);
+}
+.kcard-score-mini.med { background: rgba(255,184,77,0.12); color: var(--warn); }
+.kcard-score-mini.low { background: rgba(255,77,109,0.1); color: var(--danger); }
+.kcard-ia-tag {
+  font-size: 10px;
+  background: rgba(124,111,255,0.12);
+  color: var(--accent);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── FICHE PROSPECT ── */
+.fiche-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  z-index: 100;
+  align-items: center;
+  justify-content: flex-end;
+}
+.fiche-overlay.open { display: flex; }
+.fiche-panel {
+  width: 640px;
+  height: 100vh;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  animation: slideIn 0.2s ease;
+}
+@keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.fiche-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: sticky; top: 0;
+  background: var(--bg2);
+  z-index: 10;
+}
+.fiche-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.fiche-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; }
+.fiche-handle { color: var(--accent); font-size: 13px; margin-top: 2px; }
+.fiche-close {
+  margin-left: auto;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px; color: var(--muted);
+  flex-shrink: 0;
+}
+.fiche-close:hover { color: var(--text); }
+.fiche-body { padding: 20px 24px; }
+.fiche-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+.fiche-tab {
+  flex: 1; text-align: center;
+  padding: 7px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.fiche-tab.active { background: var(--bg2); color: var(--text); }
+.fiche-section { margin-bottom: 20px; }
+.fiche-section-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.info-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.info-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.info-value { font-size: 13px; font-weight: 500; }
+.info-value a { color: var(--accent); text-decoration: none; }
+.ia-analysis {
+  background: rgba(124,111,255,0.06);
+  border: 1px solid rgba(124,111,255,0.15);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.ia-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.ia-score {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.ia-score-bar {
+  flex: 1; height: 6px;
+  background: var(--bg);
+  border-radius: 4px; overflow: hidden;
+}
+.ia-score-fill { height: 100%; border-radius: 4px; background: var(--success); }
+.ia-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+.process-steps { display: flex; flex-direction: column; gap: 8px; }
+.process-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.step-day {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.step-day.done { background: rgba(0,229,160,0.1); border-color: var(--success); color: var(--success); }
+.step-day.active { background: rgba(124,111,255,0.1); border-color: var(--accent); color: var(--accent); }
+.step-day.todo { border-style: dashed; }
+.step-content { flex: 1; }
+.step-title { font-size: 13px; font-weight: 500; }
+.step-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.step-status {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.step-status.done { background: rgba(0,229,160,0.1); color: var(--success); }
+.step-status.active { background: rgba(124,111,255,0.1); color: var(--accent); }
+.step-status.todo { background: var(--bg); color: var(--muted); }
+
+.msg-thread { display: flex; flex-direction: column; gap: 10px; }
+.msg-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.msg-bubble.them {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+}
+.msg-bubble.me {
+  background: rgba(124,111,255,0.15);
+  border: 1px solid rgba(124,111,255,0.2);
+  align-self: flex-end;
+  color: var(--text);
+}
+.msg-time { font-size: 10px; color: var(--muted); margin-top: 4px; font-family: 'DM Mono', monospace; }
+.msg-input-area {
+  margin-top: 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.msg-input {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  resize: none;
+}
+.msg-input::placeholder { color: var(--muted); }
+.msg-actions {
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+}
+.ia-suggest {
+  font-size: 12px;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+.ia-suggest:hover { opacity: 0.8; }
+
+/* ── PROCESS SETTING VIEW ── */
+.process-view { max-width: 900px; }
+.process-header-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.process-timeline { display: flex; flex-direction: column; gap: 0; }
+.timeline-phase {
+  display: flex;
+  gap: 20px;
+}
+.timeline-line-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+.timeline-circle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+  flex-shrink: 0;
+}
+.timeline-vline { width: 2px; flex: 1; min-height: 20px; background: var(--border); margin: 4px 0; }
+.timeline-content {
+  flex: 1;
+  padding-bottom: 24px;
+}
+.timeline-day {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.timeline-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.timeline-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.timeline-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.timeline-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.timeline-card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ── COMMISSIONS ── */
+.commission-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+.comm-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.comm-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.comm-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; }
+.comm-value.green { color: var(--success); }
+.comm-value.purple { color: var(--accent); }
+.comm-table { width: 100%; border-collapse: collapse; }
+.comm-table th {
+  text-align: left; padding: 10px 14px;
+  font-size: 11px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.comm-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
+.tag-insta { background: rgba(255,107,157,0.1); color: var(--accent2); }
+.tag-audit { background: rgba(0,229,192,0.1); color: var(--accent3); }
+.tag-manual { background: rgba(124,111,255,0.1); color: var(--accent); }
+
+.empty-col {
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo"><div class="logo-dot"></div>SettingOS</div>
+
+  <div class="nav-section">
+    <div class="nav-label">CRM</div>
+    <div class="nav-item active" onclick="showView('prospects')">
+      <span class="nav-icon">👤</span> Prospects
+      <span class="nav-badge">47</span>
+    </div>
+    <div class="nav-item" onclick="showView('pipeline')">
+      <span class="nav-icon">⚡</span> Pipeline
+      <span class="nav-badge warn">8</span>
+    </div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">Setting</div>
+    <div class="nav-item" onclick="showView('process')">
+      <span class="nav-icon">📋</span> Process
+    </div>
+    <div class="nav-item" onclick="showView('calls')">
+      <span class="nav-icon">📞</span> Calls bookés
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showView('commissions')">
+      <span class="nav-icon">💰</span> Commissions
+    </div>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-label">Intelligence</div>
+    <div class="nav-item" onclick="showView('contenu')">
+      <span class="nav-icon">💡</span> Contenu IA
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="setter-card">
+      <div class="setter-avatar">S</div>
+      <div>
+        <div class="setter-name">Setteuse</div>
+        <div class="setter-role">En ligne · 3 relances</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="page-title">Prospects</div>
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" placeholder="Rechercher un prospect...">
+    </div>
+    <button class="btn btn-ghost" onclick="showFiche()">+ Ajouter via lien Insta</button>
+    <button class="btn btn-primary">↓ Importer</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ── VIEW: PROSPECTS ── -->
+    <div class="view active" id="view-prospects">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total prospects</div>
+          <div class="stat-value">47</div>
+          <div class="stat-sub stat-up">↑ +6 cette semaine</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Qualifiés IA</div>
+          <div class="stat-value" style="color:var(--success)">31</div>
+          <div class="stat-sub">66% de la pipe</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">À relancer auj.</div>
+          <div class="stat-value" style="color:var(--warn)">8</div>
+          <div class="stat-sub stat-down">⚠ Urgent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Calls booked</div>
+          <div class="stat-value" style="color:var(--accent2)">3</div>
+          <div class="stat-sub">Ce mois</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Taux conversion</div>
+          <div class="stat-value" style="color:var(--accent)">18%</div>
+          <div class="stat-sub stat-up">↑ +3% vs mois dernier</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="filter-pill active">Tous (47)</button>
+        <button class="filter-pill">Nouveau (12)</button>
+        <button class="filter-pill">En contact (18)</button>
+        <button class="filter-pill">Nurturing (9)</button>
+        <button class="filter-pill">Qualifié (5)</button>
+        <button class="filter-pill">Call booké (3)</button>
+        <button class="filter-pill">Lost (0)</button>
+        <button class="filter-pill" style="margin-left:auto">🔴 Urgent aujourd'hui</button>
+      </div>
+
+      <table class="prospect-table">
+        <thead>
+          <tr>
+            <th>Prospect</th>
+            <th>Source</th>
+            <th>Statut</th>
+            <th>Score cible</th>
+            <th>Prochain relance</th>
+            <th>Niche</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="showFiche('sarah')">
+            <td>
+              <div class="prospect-info">
+                <div class="prospect-avatar">SL</div>
+                <div>
+                  <div class="prospect-name">Sarah Lambert</div>
+                  <div class="prospect-handle">@sarahlambert.coach</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag tag-audit">Audit optin</span></td>
+            <td><span class="badge badge-qualified">Qualifié</span></td>
+            <td>
+              <div class="score-bar">
+                <div class="score-track"><div class="score-fill high" style="width:88%"></div></div>
+                <span class="score-num">88</span>
+              </div>
+            </td>
+            <td><span class="relance-tag urgent">⚡ Aujourd'hui</span></td>
+            <td style="color:var(--muted);font-size:12px">Coaching féminin</td>
+          </tr>
+          <tr onclick="showFiche('marc')">
+            <td>
+              <div class="prospect-info">
+                <div class="prospect-avatar" style="background:linear-gradient(135deg,#00e5c0,#7c6fff)">MD</div>
+                <div>
+                  <div class="prospect-name">Marc Dubois</div>
+                  <div class="prospect-handle">@marcdubois.fit</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag tag-insta">Instagram</span></td>
+            <td><span class="badge badge-contact">En contact</span></td>
+            <td>
+              <div class="score-bar">
+                <div class="score-track"><div class="score-fill high" style="width:72%"></div></div>
+                <span class="score-num">72</span>
+              </div>
+            </td>
+            <td><span class="relance-tag soon">📅 Demain</span></td>
+            <td style="color:var(--muted);font-size:12px">Fitness & nutrition</td>
+          </tr>
+          <tr onclick="showFiche()">
+            <td>
+              <div class="prospect-info">
+                <div class="prospect-avatar" style="background:linear-gradient(135deg,#ffb84d,#ff6b9d)">JM</div>
+                <div>
+                  <div class="prospect-name">Julie Martin</div>
+                  <div class="prospect-handle">@juliecoach.life</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag tag-manual">Manuel</span></td>
+            <td><span class="badge badge-nurture">Nurturing</span></td>
+            <td>
+              <div class="score-bar">
+                <div class="score-track"><div class="score-fill med" style="width:55%"></div></div>
+                <span class="score-num">55</span>
+              </div>
+            </td>
+            <td><span class="relance-tag">📅 J+5 (24 juin)</span></td>
+            <td style="color:var(--muted);font-size:12px">Mindset & business</td>
+          </tr>
+          <tr onclick="showFiche()">
+            <td>
+              <div class="prospect-info">
+                <div class="prospect-avatar" style="background:linear-gradient(135deg,#00e5a0,#7c6fff)">AT</div>
+                <div>
+                  <div class="prospect-name">Alex Tran</div>
+                  <div class="prospect-handle">@alextran.entrepreneur</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag tag-audit">Audit optin</span></td>
+            <td><span class="badge badge-booked">Call booké</span></td>
+            <td>
+              <div class="score-bar">
+                <div class="score-track"><div class="score-fill high" style="width:91%"></div></div>
+                <span class="score-num">91</span>
+              </div>
+            </td>
+            <td><span class="relance-tag" style="color:var(--success)">✅ Call 25 juin 14h</span></td>
+            <td style="color:var(--muted);font-size:12px">E-commerce</td>
+          </tr>
+          <tr onclick="showFiche()">
+            <td>
+              <div class="prospect-info">
+                <div class="prospect-avatar" style="background:linear-gradient(135deg,#7c6fff,#00e5c0)">CL</div>
+                <div>
+                  <div class="prospect-name">Clara Leroy</div>
+                  <div class="prospect-handle">@clara.wellness</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag tag-insta">Instagram</span></td>
+            <td><span class="badge badge-new">Nouveau</span></td>
+            <td>
+              <div class="score-bar">
+                <div class="score-track"><div class="score-fill low" style="width:32%"></div></div>
+                <span class="score-num">32</span>
+              </div>
+            </td>
+            <td><span class="relance-tag">📅 J+1 (demain)</span></td>
+            <td style="color:var(--muted);font-size:12px">Bien-être</td>
+          </tr>
+          <tr onclick="showFiche()">
+            <td>
+              <div class="prospect-info">
+                <div class="prospect-avatar" style="background:linear-gradient(135deg,#ff6b9d,#ffb84d)">RB</div>
+                <div>
+                  <div class="prospect-name">Romain Bernard</div>
+                  <div class="prospect-handle">@romainb.agency</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag tag-manual">Manuel</span></td>
+            <td><span class="badge badge-contact">En contact</span></td>
+            <td>
+              <div class="score-bar">
+                <div class="score-track"><div class="score-fill high" style="width:79%"></div></div>
+                <span class="score-num">79</span>
+              </div>
+            </td>
+            <td><span class="relance-tag urgent">⚡ Aujourd'hui</span></td>
+            <td style="color:var(--muted);font-size:12px">Marketing digital</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── VIEW: PIPELINE KANBAN ── -->
+    <div class="view" id="view-pipeline">
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card">
+          <div class="stat-label">Pipe totale</div>
+          <div class="stat-value">47</div>
+          <div class="stat-sub">prospects actifs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Relances urgentes</div>
+          <div class="stat-value" style="color:var(--accent2)">8</div>
+          <div class="stat-sub">à faire aujourd'hui</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Qualifiés IA</div>
+          <div class="stat-value" style="color:var(--success)">31</div>
+          <div class="stat-sub">profils dans cible</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Lost ce mois</div>
+          <div class="stat-value" style="color:var(--muted)">4</div>
+          <div class="stat-sub">hors cible</div>
+        </div>
+      </div>
+      <!-- Script modal overlay -->
+      <div id="script-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;" onclick="closeScript(event)">
+        <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);width:520px;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+            <div id="smodal-step" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--accent);text-transform:uppercase"></div>
+            <div id="smodal-title" style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;flex:1"></div>
+            <div onclick="closeScript()" style="cursor:pointer;color:var(--muted);font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg3);">✕</div>
+          </div>
+          <div id="smodal-body" style="padding:20px 24px;"></div>
+        </div>
+      </div>
+
+      <!-- A/B Test banner -->
+      <div style="background:rgba(124,111,255,0.07);border:1px solid rgba(124,111,255,0.18);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:13px;font-weight:500;color:var(--accent)">✦ A/B Test actif</span>
+        <span style="font-size:12px;color:var(--muted)">Semaine 3 · Amorce A vs B · 24 prospects · Résultat dans <span style="color:var(--warn);font-weight:500">4 jours</span></span>
+        <span style="margin-left:auto;background:rgba(0,229,160,0.1);color:var(--success);font-size:11px;padding:3px 10px;border-radius:4px;font-family:'DM Mono',monospace">Variante A +12% réponse</span>
+        <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px;" onclick="showAbTest()">Voir détails</button>
+      </div>
+
+      <!-- Kanban process SPB -->
+      <div class="kanban-board">
+
+        <!-- 1. NOUVEAU -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#7c6fff"></div>
+            <div class="kanban-title" style="font-size:12px;">Nouveau</div>
+            <div class="kanban-count">12</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);">
+            IA analyse · score cible auto
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#7c6fff,#00e5c0)">CL</div>
+                <div><div class="kcard-name">Clara Leroy</div><div class="kcard-handle">@clara.wellness</div></div>
+              </div>
+              <div class="kcard-niche">Bien-être · 8.4k</div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap;">
+                <span style="font-size:10px;background:rgba(124,111,255,0.1);color:var(--accent);padding:2px 6px;border-radius:4px;">✦ IA analyse...</span>
+              </div>
+              <div class="kcard-footer">
+                <span class="kcard-relance urgent">⚡ À contacter</span>
+                <span class="kcard-score-mini med">32/100</span>
+              </div>
+            </div>
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#ff6b9d,#ffb84d)">PM</div>
+                <div><div class="kcard-name">Pierre M.</div><div class="kcard-handle">@pierrem.coach</div></div>
+              </div>
+              <div class="kcard-niche">Business · 3.1k</div>
+              <div style="display:flex;gap:4px;margin-bottom:6px;">
+                <span style="font-size:10px;background:rgba(0,229,160,0.1);color:var(--success);padding:2px 6px;border-radius:4px;">✓ Dans cible</span>
+              </div>
+              <div class="kcard-footer">
+                <span class="kcard-relance">📅 Envoyer amorce</span>
+                <span class="kcard-score-mini">76/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. AMORCE ENVOYÉE -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#00e5c0"></div>
+            <div class="kanban-title" style="font-size:12px;">Amorce envoyée</div>
+            <div class="kanban-count">8</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
+            <span>"Bonjour {Prénom}, tu fais...</span>
+            <span onclick="showScript('amorce')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche('marc')">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#00e5c0,#7c6fff)">MD</div>
+                <div><div class="kcard-name">Marc Dubois</div><div class="kcard-handle">@marcdubois.fit</div></div>
+              </div>
+              <div class="kcard-niche">Fitness · 22k</div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Envoyé hier · Pas de réponse</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance soon">📅 Relancer J+1</span>
+                <span class="kcard-score-mini">72/100</span>
+              </div>
+            </div>
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#ff6b9d,#7c6fff)">LB</div>
+                <div><div class="kcard-name">Léa Bonnet</div><div class="kcard-handle">@leacoach.fr</div></div>
+              </div>
+              <div class="kcard-niche">Mindset · 9k</div>
+              <div style="font-size:10px;color:var(--success);margin-bottom:6px;">✓ A répondu — passer étape</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance urgent">⚡ Répondre maintenant</span>
+                <span class="kcard-score-mini">81/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. TRANSITION CALCULATEUR -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#ffb84d"></div>
+            <div class="kanban-title" style="font-size:12px;">Calculateur pitché</div>
+            <div class="kanban-count">7</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
+            <span>Attendre feu vert avant lien</span>
+            <span onclick="showScript('calculateur')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#ffb84d,#ff6b9d)">JM</div>
+                <div><div class="kcard-name">Julie Martin</div><div class="kcard-handle">@juliecoach.life</div></div>
+              </div>
+              <div class="kcard-niche">Mindset · 11k</div>
+              <div style="font-size:10px;color:var(--warn);margin-bottom:6px;">En attente de son feu vert</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance">📅 Relance si silence</span>
+                <span class="kcard-score-mini med">55/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. AUDIT ENVOYÉ -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#00e5a0"></div>
+            <div class="kanban-title" style="font-size:12px;">Audit envoyé</div>
+            <div class="kanban-count">9</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
+            <span>Lien audit · attend résultat</span>
+            <span onclick="showScript('audit')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche('sarah')">
+              <div class="kcard-top">
+                <div class="kcard-avatar">SL</div>
+                <div><div class="kcard-name">Sarah Lambert</div><div class="kcard-handle">@sarahlambert.coach</div></div>
+              </div>
+              <div class="kcard-niche">Coaching féminin · 31k</div>
+              <div style="font-size:10px;color:var(--success);margin-bottom:6px;">✓ A complété l'audit</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance urgent">⚡ Qualifier maintenant</span>
+                <span class="kcard-score-mini">88/100</span>
+              </div>
+            </div>
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#00e5a0,#7c6fff)">AT</div>
+                <div><div class="kcard-name">Alex Tran</div><div class="kcard-handle">@alextran.ent</div></div>
+              </div>
+              <div class="kcard-niche">E-commerce · 45k</div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Audit optin · pas encore complété</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance">📅 Relancer J+2</span>
+                <span class="kcard-score-mini">91/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. QUALIFICATION -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#7c6fff"></div>
+            <div class="kanban-title" style="font-size:12px;">Qualification</div>
+            <div class="kanban-count">5</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
+            <span>Calls/mois · source clients</span>
+            <span onclick="showScript('qualification')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#7c6fff,#ff6b9d)">RB</div>
+                <div><div class="kcard-name">Romain B.</div><div class="kcard-handle">@romainb.agency</div></div>
+              </div>
+              <div class="kcard-niche">Marketing · 15k</div>
+              <div style="font-size:10px;background:rgba(124,111,255,0.08);color:var(--accent);padding:3px 6px;border-radius:4px;margin-bottom:6px;">Q: Combien de calls/mois ?</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance urgent">⚡ Réponse en attente</span>
+                <span class="kcard-score-mini">79/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. CTA ENVOYÉ -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#ff6b9d"></div>
+            <div class="kanban-title" style="font-size:12px;">CTA envoyé</div>
+            <div class="kanban-count">4</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
+            <span>Lien iClosed envoyé</span>
+            <span onclick="showScript('cta')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#ff6b9d,#ffb84d)">NF</div>
+                <div><div class="kcard-name">Noé Faure</div><div class="kcard-handle">@noe.scale</div></div>
+              </div>
+              <div class="kcard-niche">E-learning · 28k</div>
+              <div style="font-size:10px;color:var(--warn);margin-bottom:6px;">Lien envoyé · pas encore booké</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance soon">📅 Relancer J+1</span>
+                <span class="kcard-score-mini">84/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. CALL BOOKÉ -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#00e5a0"></div>
+            <div class="kanban-title" style="font-size:12px;">Call booké ✓</div>
+            <div class="kanban-count">3</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);">
+            iClosed sync · récap IA auto
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" onclick="showFiche()">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:linear-gradient(135deg,#00e5a0,#7c6fff)">AT</div>
+                <div><div class="kcard-name">Alex Tran</div><div class="kcard-handle">@alextran.ent</div></div>
+              </div>
+              <div class="kcard-niche">E-commerce · 45k</div>
+              <div style="font-size:10px;background:rgba(0,229,160,0.1);color:var(--success);padding:3px 6px;border-radius:4px;margin-bottom:6px;">✓ iClosed sync · 25 juin 14h</div>
+              <div class="kcard-footer">
+                <span class="kcard-relance" style="color:var(--success)">✅ Récap IA prêt</span>
+                <span class="kcard-score-mini">91/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. LOST -->
+        <div class="kanban-col" style="min-width:210px;max-width:210px;">
+          <div class="kanban-header">
+            <div class="kanban-dot" style="background:#ff4d6d"></div>
+            <div class="kanban-title" style="font-size:12px;">Lost</div>
+            <div class="kanban-count">4</div>
+          </div>
+          <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);">
+            Hors cible · IA ou manuel
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card" style="opacity:0.45;">
+              <div class="kcard-top">
+                <div class="kcard-avatar" style="background:var(--bg3);color:var(--muted)">??</div>
+                <div><div class="kcard-name" style="color:var(--muted)">Hors avatar</div><div class="kcard-handle">@exemple</div></div>
+              </div>
+              <div class="kcard-niche" style="font-size:10px;">Score 18/100 · pas de besoin</div>
+              <div class="kcard-footer">
+                <span class="kcard-ia-tag" style="background:rgba(255,77,109,0.1);color:var(--danger);">✗ Lost auto IA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── VIEW: PROCESS ── -->
+    <div class="view" id="view-process">
+      <div class="process-view">
+        <div class="process-header-card">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px">Process Setting Complet</div>
+          <div style="color:var(--muted);font-size:13px;line-height:1.6">Standardisation du parcours setting de J0 à la conversion — Relances J1→J7 puis J+5 / J+10 à partir de J7.</div>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <div style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius-sm);padding:8px 14px;font-size:12px;color:var(--success)">✅ 6 phases définies</div>
+            <div style="background:rgba(124,111,255,0.1);border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius-sm);padding:8px 14px;font-size:12px;color:var(--accent)">✦ IA calibrée avatar</div>
+            <div style="background:rgba(255,184,77,0.1);border:1px solid rgba(255,184,77,0.2);border-radius:var(--radius-sm);padding:8px 14px;font-size:12px;color:var(--warn)">⚡ Relances automatisées</div>
+          </div>
+        </div>
+
+        <div class="process-timeline">
+
+          <!-- Phase J0 -->
+          <div class="timeline-phase">
+            <div class="timeline-line-col">
+              <div class="timeline-circle" style="background:rgba(124,111,255,0.15);color:var(--accent);border:1.5px solid var(--accent)">J0</div>
+              <div class="timeline-vline"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-day">Jour 0 — Entrée dans la pipe</div>
+              <div class="timeline-title">🔵 Nouveau prospect détecté</div>
+              <div class="timeline-cards">
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Fiche créée automatiquement</div>
+                  <div class="timeline-card-desc">Depuis l'audit optin, abonnement Instagram ou ajout manuel via lien insta. Enrichissement BIO + infos de contact.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Analyse IA profil</div>
+                  <div class="timeline-card-desc">L'IA analyse le profil Instagram : niche, taille audience, engagement, offre. Score cible de 0 à 100 attribué.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase J1 -->
+          <div class="timeline-phase">
+            <div class="timeline-line-col">
+              <div class="timeline-circle" style="background:rgba(0,229,192,0.15);color:var(--accent3);border:1.5px solid var(--accent3)">J1</div>
+              <div class="timeline-vline"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-day">Jour 1 — Premier contact</div>
+              <div class="timeline-title">💬 Prise de contact initiale</div>
+              <div class="timeline-cards">
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Message d'accroche</div>
+                  <div class="timeline-card-desc">Message personnalisé basé sur le contenu récent du prospect. L'IA avatar suggère le bon angle d'accroche selon la niche.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Objectif J1</div>
+                  <div class="timeline-card-desc">Obtenir une réponse. Engager la conversation. Ne pas pitcher. Créer de la curiosité sur ce que tu proposes.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase J2-J7 -->
+          <div class="timeline-phase">
+            <div class="timeline-line-col">
+              <div class="timeline-circle" style="background:rgba(255,184,77,0.15);color:var(--warn);border:1.5px solid var(--warn)">J2-7</div>
+              <div class="timeline-vline"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-day">Jours 2 à 7 — Nurturing intensif</div>
+              <div class="timeline-title">🔥 Éducation & Qualification</div>
+              <div class="timeline-cards">
+                <div class="timeline-card">
+                  <div class="timeline-card-title">J2 — Relance si pas de réponse</div>
+                  <div class="timeline-card-desc">Message de suivi différent, angle valeur. Partage d'un insight pertinent pour sa niche.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">J3-4 — Qualification</div>
+                  <div class="timeline-card-desc">Questions de qualification : objectif, problème actuel, qu'est-ce qui lui manque. L'IA suggère les bonnes questions.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">J5-6 — Traitement objections</div>
+                  <div class="timeline-card-desc">Répondre aux doutes. L'IA propose des réponses calibrées aux objections les plus fréquentes de l'avatar.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">J7 — Proposition call</div>
+                  <div class="timeline-card-desc">Si qualifié : proposition d'un appel stratégique. Lien iClosed envoyé. Passage en statut "Call booké".</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase Relances longues -->
+          <div class="timeline-phase">
+            <div class="timeline-line-col">
+              <div class="timeline-circle" style="background:rgba(255,107,157,0.15);color:var(--accent2);border:1.5px solid var(--accent2)">+5</div>
+              <div class="timeline-vline"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-day">À partir de J+7 — Relances long terme</div>
+              <div class="timeline-title">📅 Nurturing long terme</div>
+              <div class="timeline-cards">
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Relance J+5</div>
+                  <div class="timeline-card-desc">Après 5 jours sans réponse post J7 : nouveau message avec angle différent. Partage de social proof ou win client.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Relance J+10</div>
+                  <div class="timeline-card-desc">Dernière relance du cycle : message direct et bienveillant. Si pas de réponse → passage automatique en Nurturing passif.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase Call -->
+          <div class="timeline-phase">
+            <div class="timeline-line-col">
+              <div class="timeline-circle" style="background:rgba(0,229,160,0.15);color:var(--success);border:1.5px solid var(--success)">📞</div>
+              <div class="timeline-vline"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-day">Call booké — Passation Closer</div>
+              <div class="timeline-title">✅ Préparation closing</div>
+              <div class="timeline-cards">
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Récap IA automatique</div>
+                  <div class="timeline-card-desc">Synthèse de l'échange : profil, douleurs exprimées, objections soulevées, niveau de motivation. Envoyé au closer.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Checklist setting validée</div>
+                  <div class="timeline-card-desc">Vérification : prospect qualifié ✓, problème identifié ✓, budget évoqué ✓, décideur confirmé ✓, appel confirmé ✓.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase Commission -->
+          <div class="timeline-phase">
+            <div class="timeline-line-col">
+              <div class="timeline-circle" style="background:rgba(255,184,77,0.15);color:var(--warn);border:1.5px solid var(--warn)">💰</div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-day">Résultat — Suivi commission</div>
+              <div class="timeline-title">💰 Fermeture & Commission</div>
+              <div class="timeline-cards">
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Deal fermé</div>
+                  <div class="timeline-card-desc">Le closer marque le deal comme gagné. La commission est calculée automatiquement et ajoutée au tracker.</div>
+                </div>
+                <div class="timeline-card">
+                  <div class="timeline-card-title">Feedback setting</div>
+                  <div class="timeline-card-desc">Note de qualité du setting : prospect bien qualifié ? Infos correctes ? Permet d'améliorer le process.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: CALLS BOOKÉS ── -->
+    <div class="view" id="view-calls">
+      <div class="stats-row" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card">
+          <div class="stat-label">Calls cette semaine</div>
+          <div class="stat-value" style="color:var(--accent2)">3</div>
+          <div class="stat-sub">liés à ton lien iClosed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Taux show-up</div>
+          <div class="stat-value" style="color:var(--success)">100%</div>
+          <div class="stat-sub">3/3 présents</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Taux closing</div>
+          <div class="stat-value" style="color:var(--accent)">—</div>
+          <div class="stat-sub">En attente résultats</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <!-- Call 1 -->
+        <div style="background:var(--bg2);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius);padding:20px;display:flex;gap:20px;align-items:flex-start">
+          <div style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:80px">
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Aujourd'hui</div>
+            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--success)">14h00</div>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <div style="font-weight:600;font-size:15px">Alex Tran</div>
+              <span class="badge badge-booked">Call booké</span>
+              <span style="font-size:12px;color:var(--muted);margin-left:auto">@alextran.entrepreneur</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px">
+              <strong style="color:var(--text)">Récap IA :</strong> E-commerce 7 chiffres. Bloqué sur la scalabilité. Cherche un accompagnement structuré. A déjà essayé seul, résultats insuffisants. Très motivé. Budget non évoqué mais CA indique la capacité. <strong style="color:var(--accent2)">Profil : chaud ⚡</strong>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-primary" style="font-size:12px;padding:6px 14px">📞 Appeler</button>
+              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📋 Voir fiche</button>
+              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">✅ Checklist</button>
+              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;margin-left:auto;color:var(--success)">→ Fermé</button>
+              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;color:var(--danger)">✗ No show</button>
+            </div>
+          </div>
+        </div>
+        <!-- Call 2 -->
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;gap:20px;align-items:flex-start">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;text-align:center;min-width:80px">
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">26 juin</div>
+            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text)">10h30</div>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <div style="font-weight:600;font-size:15px">Sarah Lambert</div>
+              <span class="badge badge-booked">Call booké</span>
+              <span style="font-size:12px;color:var(--muted);margin-left:auto">@sarahlambert.coach</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px">
+              <strong style="color:var(--text)">Récap IA :</strong> Coach féminin 31k abonnés. Veut passer au palier supérieur avec un système de vente. Prête à investir. Décideuse.
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📋 Voir fiche</button>
+              <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px">📝 Notes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW: COMMISSIONS ── -->
+    <div class="view" id="view-commissions">
+      <div class="commission-grid">
+        <div class="comm-card">
+          <div class="comm-label">Commissions ce mois</div>
+          <div class="comm-value green">1 200 €</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">3 deals closés</div>
+        </div>
+        <div class="comm-card">
+          <div class="comm-label">En attente (calls bookés)</div>
+          <div class="comm-value purple">~2 800 €</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Si taux closing 67%</div>
+        </div>
+        <div class="comm-card">
+          <div class="comm-label">Objectif mensuel</div>
+          <div class="comm-value" style="color:var(--warn)">3 000 €</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+            <div style="flex:1;height:4px;background:var(--bg3);border-radius:4px;overflow:hidden">
+              <div style="width:40%;height:100%;background:var(--warn);border-radius:4px"></div>
+            </div>
+            <span style="font-size:11px;color:var(--muted)">40%</span>
+          </div>
+        </div>
+      </div>
+      <table class="comm-table">
+        <thead>
+          <tr>
+            <th>Prospect</th>
+            <th>Date closing</th>
+            <th>Valeur deal</th>
+            <th>% Commission</th>
+            <th>Commission</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Marc Dubois</strong></td>
+            <td style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px">15 juin 2025</td>
+            <td style="font-family:'DM Mono',monospace">4 000 €</td>
+            <td style="font-family:'DM Mono',monospace">10%</td>
+            <td style="font-weight:600;color:var(--success)">400 €</td>
+            <td><span class="badge badge-qualified">Payée ✓</span></td>
+          </tr>
+          <tr>
+            <td><strong>Julie Martin</strong></td>
+            <td style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px">18 juin 2025</td>
+            <td style="font-family:'DM Mono',monospace">8 000 €</td>
+            <td style="font-family:'DM Mono',monospace">10%</td>
+            <td style="font-weight:600;color:var(--success)">800 €</td>
+            <td><span class="badge badge-qualified">Payée ✓</span></td>
+          </tr>
+          <tr>
+            <td><strong>Alex Tran</strong></td>
+            <td style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px">En attente</td>
+            <td style="font-family:'DM Mono',monospace">—</td>
+            <td style="font-family:'DM Mono',monospace">10%</td>
+            <td style="font-weight:600;color:var(--muted)">—</td>
+            <td><span class="badge badge-booked">Call 25/06</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── VIEW: CONTENU IA ── -->
+    <div class="view" id="view-contenu">
+
+      <!-- Stats row -->
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-label">Signaux analysés</div>
+          <div class="stat-value" style="color:var(--accent)">214</div>
+          <div class="stat-sub">messages · 47 prospects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Objections détectées</div>
+          <div class="stat-value" style="color:var(--danger)">23</div>
+          <div class="stat-sub">Top : "pas le bon moment"</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Idées classées</div>
+          <div class="stat-value" style="color:var(--success)">11</div>
+          <div class="stat-sub">TOFU 4 · MOFU 4 · BOFU 3</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tendance du mois</div>
+          <div class="stat-value" style="font-size:13px;font-weight:600;padding-top:6px">Peur d'investir</div>
+          <div class="stat-sub stat-up">↑ +12% vs mois dernier</div>
+        </div>
+      </div>
+
+      <!-- Tabs contenu -->
+      <div style="display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;width:fit-content;margin-bottom:20px">
+        <div class="ctab active" onclick="switchCtab(this,'ct-analyse')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg3);color:var(--text)">✦ Analyse IA</div>
+        <div class="ctab" onclick="switchCtab(this,'ct-idees')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)">💡 Banque d'idées</div>
+        <div class="ctab" onclick="switchCtab(this,'ct-ajouter')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)">+ Ajouter une idée</div>
+      </div>
+
+      <!-- TAB: ANALYSE IA -->
+      <div id="ct-analyse">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+          <!-- Objections -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+            <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px;margin-bottom:4px">Objections détectées dans les DMs</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Extraites automatiquement des conversations · Ce mois</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:500">"Pas le bon moment"</span>
+                  <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,77,109,0.1);color:var(--danger);padding:2px 8px;border-radius:4px">38% · 9×</span>
+                </div>
+                <div style="height:4px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="width:88%;height:100%;background:var(--danger);border-radius:4px"></div></div>
+                <div style="font-size:11px;color:var(--muted);line-height:1.6">Détectée chez des profils qualifiés 7/9 fois — signal fort d'une peur de l'engagement, pas d'un vrai timing. <span style="color:var(--accent)">→ Contenu MOFU idéal</span></div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:500">"Trop cher / je vois pas le ROI"</span>
+                  <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,184,77,0.1);color:var(--warn);padding:2px 8px;border-radius:4px">28% · 6×</span>
+                </div>
+                <div style="height:4px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="width:65%;height:100%;background:var(--warn);border-radius:4px"></div></div>
+                <div style="font-size:11px;color:var(--muted);line-height:1.6">Apparaît souvent avant même d'avoir vu l'offre. Objection de valeur perçue. <span style="color:var(--accent)">→ Contenu éducation TOFU/MOFU</span></div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:500">"J'ai besoin d'y réfléchir"</span>
+                  <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;background:rgba(124,111,255,0.1);color:var(--accent);padding:2px 8px;border-radius:4px">19% · 4×</span>
+                </div>
+                <div style="height:4px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="width:45%;height:100%;background:var(--accent);border-radius:4px"></div></div>
+                <div style="font-size:11px;color:var(--muted);line-height:1.6">Stade MOFU — prospect intéressé mais manque de confiance. Besoin de réassurance et social proof. <span style="color:var(--accent)">→ Témoignages BOFU</span></div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                  <span style="font-size:13px;font-weight:500">"J'ai déjà essayé, ça n'a pas marché"</span>
+                  <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;background:rgba(0,229,192,0.1);color:var(--accent3);padding:2px 8px;border-radius:4px">15% · 3×</span>
+                </div>
+                <div style="height:4px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="width:35%;height:100%;background:var(--accent3);border-radius:4px"></div></div>
+                <div style="font-size:11px;color:var(--muted);line-height:1.6">Peur de reproduire un échec passé. Différenciation nécessaire. <span style="color:var(--accent)">→ Contenu BOFU différenciation</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tendances & signaux -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;flex:1">
+              <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px;margin-bottom:4px">Tendances du mois</div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Signaux récurrents dans les conversations</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid rgba(255,77,109,0.15)">
+                  <span style="font-size:16px">📈</span>
+                  <div>
+                    <div style="font-size:13px;font-weight:500;margin-bottom:2px">Peur d'investir en soi</div>
+                    <div style="font-size:11px;color:var(--muted)">+12% ce mois. Les prospects parlent de "risque" avant même d'entendre l'offre. Signal fort à adresser en contenu.</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid rgba(255,184,77,0.15)">
+                  <span style="font-size:16px">🔁</span>
+                  <div>
+                    <div style="font-size:13px;font-weight:500;margin-bottom:2px">Comparaison avec autres offres</div>
+                    <div style="font-size:11px;color:var(--muted)">7 prospects ont mentionné avoir regardé d'autres programmes. Besoin fort de différenciation.</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid rgba(0,229,160,0.15)">
+                  <span style="font-size:16px">💬</span>
+                  <div>
+                    <div style="font-size:13px;font-weight:500;margin-bottom:2px">Demande de preuves concrètes</div>
+                    <div style="font-size:11px;color:var(--muted)">"T'as des exemples de résultats ?" revient 11 fois ce mois. Les témoignages chiffrés manquent dans le contenu.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius);padding:16px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent);margin-bottom:6px">✦ Recommandation IA cette semaine</div>
+              <div style="font-size:13px;color:var(--text);line-height:1.6">Priorité absolue : créer 1 carrousel MOFU sur la peur d'investir (touche 38%+28% des objections). Format avant/après avec chiffres. Impact estimé sur la conversion : <strong style="color:var(--success)">+15 à 20%</strong> sur les qualifiés.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: BANQUE D'IDÉES -->
+      <div id="ct-idees" style="display:none">
+
+        <!-- Filtres funnel -->
+        <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
+          <button class="filter-pill active" onclick="filterIdees(this,'all')">Toutes (11)</button>
+          <button class="filter-pill" onclick="filterIdees(this,'tofu')" style="border-color:rgba(0,229,192,0.3);color:var(--accent3)">TOFU · Attirer (4)</button>
+          <button class="filter-pill" onclick="filterIdees(this,'mofu')" style="border-color:rgba(255,184,77,0.3);color:var(--warn)">MOFU · Éduquer (4)</button>
+          <button class="filter-pill" onclick="filterIdees(this,'bofu')" style="border-color:rgba(255,107,157,0.3);color:var(--accent2)">BOFU · Convertir (3)</button>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button class="filter-pill" onclick="filterIdees(this,'mine')" style="border-color:rgba(124,111,255,0.3);color:var(--accent)">Les miennes</button>
+            <button class="filter-pill" onclick="filterIdees(this,'ia')">✦ Générées IA</button>
+          </div>
+        </div>
+
+        <!-- Grille idées -->
+        <div id="idees-grid" style="display:flex;flex-direction:column;gap:10px">
+
+          <!-- TOFU -->
+          <div class="idee-card" data-funnel="tofu" data-source="ia" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(0,229,192,0.1);color:var(--accent3);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">TOFU</span>
+                <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">✦ IA</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"5 signes que tu es prêt·e à scaler ton activité"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Reel · Carrousel</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--accent3);font-size:11px">Réflexion derrière :</strong><br>
+                  Beaucoup de prospects ne se reconnaissent pas encore comme "prêts". Ce contenu leur fait prendre conscience qu'ils ont exactement le profil qu'on accompagne. Attire du trafic froid qualifié sans vendre. Accroche naturelle vers notre avatar.
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:3px 8px;border-radius:4px">Impact : 🔥🔥🔥</span>
+                <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="promoteIdee(this)">→ Planifier</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="idee-card" data-funnel="tofu" data-source="ia" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(0,229,192,0.1);color:var(--accent3);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">TOFU</span>
+                <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">✦ IA</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"Ce que j'aurais voulu savoir avant de lancer mon coaching"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Reel storytelling</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--accent3);font-size:11px">Réflexion derrière :</strong><br>
+                  Positionne l'expertise, crée de la proximité avec la cible. Les coaches débutants/intermédiaires s'identifient. Porte d'entrée vers l'univers sans paraître vendeur. Génère des sauvegardes = signal fort d'intérêt.
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:3px 8px;border-radius:4px">Impact : 🔥🔥</span>
+                <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px">→ Planifier</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="idee-card" data-funnel="tofu" data-source="mine" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent3);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(0,229,192,0.1);color:var(--accent3);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">TOFU</span>
+                <span style="font-size:10px;color:var(--accent);font-family:'DM Mono',monospace">Moi</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"Le mythe du 'j'attends d'avoir plus d'abonnés'"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Carrousel · Thread</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--accent3);font-size:11px">Réflexion derrière :</strong><br>
+                  Beaucoup de prospects attendent une "légitimité" qui ne viendra pas seule. Ce contenu casse cette croyance et les pousse à agir maintenant. Parfait pour toucher des coaches qui stagnent depuis 6-12 mois.
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:3px 8px;border-radius:4px">Impact : 🔥🔥🔥</span>
+                <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px">→ Planifier</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MOFU -->
+          <div class="idee-card" data-funnel="mofu" data-source="ia" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(255,184,77,0.1);color:var(--warn);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">MOFU</span>
+                <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">✦ IA</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"Pourquoi 'le bon moment' n'existera jamais (et comment arrêter d'attendre)"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Carrousel · Reel face cam</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--warn);font-size:11px">Réflexion derrière :</strong><br>
+                  Répond directement à l'objection #1 détectée dans les DMs (38%). Ce contenu éduque les prospects chauds qui hésitent. Effet : quand la setteuse relance, le prospect a déjà vu ce contenu et le frein est déjà levé en partie. <strong style="color:var(--accent2)">Impact direct sur le taux de conversion.</strong>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,107,157,0.1);color:var(--accent2);padding:3px 8px;border-radius:4px">Impact : 🔥🔥🔥🔥</span>
+                <button class="btn btn-primary" style="font-size:11px;padding:4px 10px">⭐ Priorité</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="idee-card" data-funnel="mofu" data-source="ia" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(255,184,77,0.1);color:var(--warn);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">MOFU</span>
+                <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">✦ IA</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"Ce que coûte vraiment de ne rien faire pendant 6 mois"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Carrousel chiffré · Story</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--warn);font-size:11px">Réflexion derrière :</strong><br>
+                  Contre l'objection prix et timing à la fois. Calcul concret : CA manqué, clients perdus, énergie gaspillée. Retourne l'équation — investir devient moins cher que de stater. Très efficace sur profils qualifiés hésitants.
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:3px 8px;border-radius:4px">Impact : 🔥🔥🔥</span>
+                <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px">→ Planifier</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOFU -->
+          <div class="idee-card" data-funnel="bofu" data-source="mine" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(255,107,157,0.1);color:var(--accent2);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">BOFU</span>
+                <span style="font-size:10px;color:var(--accent);font-family:'DM Mono',monospace">Moi</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"De 0 à 8k€/mois en 90 jours — l'histoire de [prénom client]"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Reel témoignage · Story série</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--accent2);font-size:11px">Réflexion derrière :</strong><br>
+                  Les prospects en fin de funnel ont besoin de voir que ça fonctionne pour "quelqu'un comme eux". Témoignage chiffré + délai précis + profil similaire = meilleur levier de conversion. Déclenche les DMs spontanés de prospects chauds.
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,107,157,0.1);color:var(--accent2);padding:3px 8px;border-radius:4px">Impact : 🔥🔥🔥🔥</span>
+                <button class="btn btn-primary" style="font-size:11px;padding:4px 10px">⭐ Priorité</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="idee-card" data-funnel="bofu" data-source="ia" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:var(--radius);padding:16px 20px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px">
+                <span style="background:rgba(255,107,157,0.1);color:var(--accent2);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.05em">BOFU</span>
+                <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">✦ IA</span>
+              </div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">"Pourquoi mes clients qui ont déjà essayé sans résultat réussissent avec moi"</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Format suggéré : Carrousel · Reel</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)">
+                  <strong style="color:var(--accent2);font-size:11px">Réflexion derrière :</strong><br>
+                  Répond à l'objection "j'ai déjà essayé" (15% des cas). Différencie clairement l'approche. Le prospect comprend que l'échec passé n'était pas de sa faute mais de méthode. Lève la croyance limitante avant le call.
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:80px">
+                <span style="font-family:'DM Mono',monospace;font-size:11px;background:rgba(0,229,160,0.1);color:var(--success);padding:3px 8px;border-radius:4px">Impact : 🔥🔥🔥</span>
+                <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px">→ Planifier</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB: AJOUTER UNE IDÉE -->
+      <div id="ct-ajouter" style="display:none;max-width:680px">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+          <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:16px;margin-bottom:6px">Ajouter une idée de contenu</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:20px">L'IA va automatiquement la classer en TOFU / MOFU / BOFU et estimer son impact selon les objections détectées.</div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Titre / angle de l'idée</div>
+              <input id="idee-titre" type="text" placeholder="Ex: Les 3 erreurs qui t'empêchent de passer à 5k/mois..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+            </div>
+
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Réflexion derrière (contexte, intention)</div>
+              <textarea id="idee-reflexion" rows="3" placeholder="Pourquoi cette idée ? Quel problème ça résout ? À qui ça parle ?" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical"></textarea>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div>
+                <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Stade funnel (si tu sais déjà)</div>
+                <select id="idee-funnel" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
+                  <option value="auto">✦ Laisser l'IA décider</option>
+                  <option value="tofu">TOFU — Attirer / Awareness</option>
+                  <option value="mofu">MOFU — Éduquer / Considération</option>
+                  <option value="bofu">BOFU — Convertir / Décision</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Format suggéré</div>
+                <select id="idee-format" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer">
+                  <option value="">Format libre</option>
+                  <option>Reel</option>
+                  <option>Carrousel</option>
+                  <option>Story série</option>
+                  <option>Reel face cam</option>
+                  <option>Témoignage</option>
+                  <option>Thread / Caption long</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">Ajoutée par</div>
+              <div style="display:flex;gap:8px">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+                  <input type="radio" name="auteur" value="moi" checked> Moi (Boss)
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+                  <input type="radio" name="auteur" value="setteuse"> Setteuse
+                </label>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="ajouterIdee()">✦ Analyser & Ajouter à la banque</button>
+          </div>
+        </div>
+
+        <!-- Aperçu résultat -->
+        <div id="idee-preview" style="display:none;margin-top:14px;background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius);padding:16px">
+          <div style="font-size:12px;font-weight:500;color:var(--accent);margin-bottom:8px">✦ Analyse IA — Résultat du classement</div>
+          <div id="idee-preview-content" style="font-size:13px;color:var(--text);line-height:1.6"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ── FICHE PROSPECT OVERLAY ── -->
+<div class="fiche-overlay" id="fiche-overlay" onclick="closeFiche(event)">
+  <div class="fiche-panel" onclick="event.stopPropagation()">
+    <div class="fiche-header">
+      <div class="fiche-avatar">SL</div>
+      <div>
+        <div class="fiche-name">Sarah Lambert</div>
+        <div class="fiche-handle">@sarahlambert.coach · Coaching féminin</div>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <span class="badge badge-qualified">Qualifié</span>
+          <span style="background:rgba(0,229,160,0.1);color:var(--success);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500">Score 88/100</span>
+          <span class="tag tag-audit">Audit optin</span>
+        </div>
+      </div>
+      <div class="fiche-close" onclick="closeFiche()">✕</div>
+    </div>
+    <div class="fiche-body">
+      <div class="fiche-tabs">
+        <div class="fiche-tab active" onclick="switchTab(this,'tab-infos')">Infos</div>
+        <div class="fiche-tab" onclick="switchTab(this,'tab-process')">Process</div>
+        <div class="fiche-tab" onclick="switchTab(this,'tab-messages')">Messages</div>
+        <div class="fiche-tab" onclick="switchTab(this,'tab-ia')">IA Avatar</div>
+      </div>
+
+      <!-- TAB: INFOS -->
+      <div id="tab-infos">
+        <div class="fiche-section">
+          <div class="fiche-section-title">Coordonnées</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Instagram</div>
+              <div class="info-value"><a href="#">@sarahlambert.coach</a></div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value" style="font-size:12px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="186b796a7970587479757a7d6a6c7b77797b70367e6a">[email&#160;protected]</a></div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Téléphone</div>
+              <div class="info-value">+33 6 12 34 56 78</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Abonnés</div>
+              <div class="info-value">31 200</div>
+            </div>
+          </div>
+        </div>
+        <div class="fiche-section">
+          <div class="fiche-section-title">Bio Instagram</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--muted);line-height:1.6">
+            "Coach de vie & business pour femmes ambitieuses 🔥 | J'aide les entrepreneures à passer à 5 chiffres/mois | +200 femmes transformées | Clique sur le lien 👇"
+          </div>
+        </div>
+        <div class="fiche-section">
+          <div class="fiche-section-title">Analyse IA du profil</div>
+          <div class="ia-analysis">
+            <div class="ia-label">✦ Analyse IA</div>
+            <div class="ia-score">
+              <span style="font-size:12px;color:var(--muted)">Correspondance avatar</span>
+              <div class="ia-score-bar"><div class="ia-score-fill" style="width:88%"></div></div>
+              <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">88%</span>
+            </div>
+            <div class="ia-text">
+              Profil fortement aligné avec l'avatar cible. Coach féminin avec une audience engagée (taux engagement ~4.2%). Contenu régulier, ton professionnel. Propose déjà des offres premium. Douleur probable : systématiser ses ventes et scaler sans sacrifier son temps. <strong style="color:var(--accent2)">Recommandation : proposer le call rapidement.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PROCESS -->
+      <div id="tab-process" style="display:none">
+        <div class="fiche-section">
+          <div class="fiche-section-title">Suivi du process — Semaine 1</div>
+          <div class="process-steps">
+            <div class="process-step">
+              <div class="step-day done">J0</div>
+              <div class="step-content">
+                <div class="step-title">Fiche créée via audit optin</div>
+                <div class="step-desc">Enrichissement auto · Score IA : 88/100</div>
+              </div>
+              <div class="step-status done">✓ Fait</div>
+            </div>
+            <div class="process-step">
+              <div class="step-day done">J1</div>
+              <div class="step-content">
+                <div class="step-title">Premier contact envoyé</div>
+                <div class="step-desc">"Ton contenu sur le mindset d'entrepreneures m'a vraiment parlé..."</div>
+              </div>
+              <div class="step-status done">✓ Répondu</div>
+            </div>
+            <div class="process-step">
+              <div class="step-day done">J3</div>
+              <div class="step-content">
+                <div class="step-title">Questions de qualification</div>
+                <div class="step-desc">Objectifs identifiés, problème exprimé, décideuse confirmée</div>
+              </div>
+              <div class="step-status done">✓ Qualifié</div>
+            </div>
+            <div class="process-step">
+              <div class="step-day active">J7</div>
+              <div class="step-content">
+                <div class="step-title">Proposition d'appel stratégique</div>
+                <div class="step-desc">Envoyer le lien iClosed · Créer urgence bienveillante</div>
+              </div>
+              <div class="step-status active">→ En cours</div>
+            </div>
+            <div class="process-step" style="opacity:0.5">
+              <div class="step-day todo">+5</div>
+              <div class="step-content">
+                <div class="step-title">Relance si pas de réponse</div>
+                <div class="step-desc">Nouveau message · Angle social proof</div>
+              </div>
+              <div class="step-status todo">À venir</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: MESSAGES -->
+      <div id="tab-messages" style="display:none">
+        <div class="fiche-section">
+          <div class="fiche-section-title">Conversation Instagram</div>
+          <div class="msg-thread">
+            <div>
+              <div class="msg-bubble me">Coucou Sarah ! Ton contenu sur le mindset des entrepreneures m'a vraiment parlé. Tu abordes des sujets tellement pertinents 🔥</div>
+              <div class="msg-time" style="text-align:right">Lundi 17 juin · 10h23</div>
+            </div>
+            <div>
+              <div class="msg-bubble them">Merci beaucoup ! Ça fait vraiment plaisir d'entendre ça 😊 C'est un sujet qui me tient vraiment à cœur</div>
+              <div class="msg-time">Lundi 17 juin · 11h05</div>
+            </div>
+            <div>
+              <div class="msg-bubble me">Je vois que tu accompagnes des femmes entrepreneurs — c'est exactement ce secteur que je suis. Tu as beaucoup de clientes en ce moment ?</div>
+              <div class="msg-time" style="text-align:right">Lundi 17 juin · 11h30</div>
+            </div>
+            <div>
+              <div class="msg-bubble them">Oui j'ai quelques clientes mais j'aimerais vraiment structurer tout ça pour passer la vitesse sup ! C'est un peu le bordel côté acquisition 😅</div>
+              <div class="msg-time">Mardi 18 juin · 09h12</div>
+            </div>
+          </div>
+          <div class="msg-input-area">
+            <textarea class="msg-input" rows="2" placeholder="Écrire un message..."></textarea>
+            <div class="msg-actions">
+              <div class="ia-suggest">✦ Suggérer avec l'IA Avatar</div>
+              <button class="btn btn-primary" style="font-size:12px;padding:6px 14px">Envoyer via DM ↗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: IA AVATAR -->
+      <div id="tab-ia" style="display:none">
+        <div class="fiche-section">
+          <div class="ia-analysis">
+            <div class="ia-label">✦ IA Avatar — Calibrée sur ta cible</div>
+            <div class="ia-text" style="margin-bottom:12px">Sarah a exprimé une douleur claire : <strong style="color:var(--text)">"l'acquisition est un peu le bordel"</strong>. Elle est prête à évoluer. Elle est décideuse. C'est le bon moment pour proposer l'appel.</div>
+          </div>
+        </div>
+        <div class="fiche-section">
+          <div class="fiche-section-title">Message suggéré pour proposer le call</div>
+          <div style="background:var(--bg3);border:1px solid rgba(124,111,255,0.2);border-radius:var(--radius-sm);padding:14px;font-size:13px;line-height:1.7;color:var(--text)">
+            "En fait j'avais une idée à te partager par rapport à ce que tu m'as dit sur l'acquisition. Est-ce que tu aurais 30 minutes cette semaine pour qu'on en discute ? J'accompagne des coaches comme toi à structurer ça et les résultats sont souvent rapides 🎯"
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn btn-primary" style="font-size:12px">Utiliser ce message</button>
+            <button class="btn btn-ghost" style="font-size:12px">✦ Autre suggestion</button>
+          </div>
+        </div>
+        <div class="fiche-section">
+          <div class="fiche-section-title">Objections probables & réponses</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent2);margin-bottom:4px">Objection : "Pas le bon moment"</div>
+              <div style="font-size:12px;color:var(--muted)">→ "Je comprends totalement ! C'est justement pour ça que les 30 min sont stratégiques — pour que tu saches exactement où mettre ton énergie."</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px">
+              <div style="font-size:12px;font-weight:500;color:var(--accent2);margin-bottom:4px">Objection : "C'est quoi exactement ?"</div>
+              <div style="font-size:12px;color:var(--muted)">→ "C'est un appel stratégique gratuit où on analyse ton système d'acquisition et je te donne des pistes concrètes, sans engagement."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  const titles = { prospects:'Prospects', pipeline:'Pipeline', process:'Process Setting', calls:'Calls Bookés', commissions:'Commissions', contenu:'Contenu IA' };
+  document.getElementById('page-title').textContent = titles[id] || id;
+  event.currentTarget.classList.add('active');
+}
+
+function showFiche(type) { document.getElementById('fiche-overlay').classList.add('open'); }
+function closeFiche(e) { if (!e || e.target === document.getElementById('fiche-overlay')) document.getElementById('fiche-overlay').classList.remove('open'); }
+
+function switchTab(el, tabId) {
+  document.querySelectorAll('.fiche-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['tab-infos','tab-process','tab-messages','tab-ia'].forEach(t => { const d = document.getElementById(t); if (d) d.style.display = t === tabId ? 'block' : 'none'; });
+}
+
+function switchCtab(el, tabId) {
+  document.querySelectorAll('.ctab').forEach(t => { t.style.background='transparent'; t.style.color='var(--muted)'; });
+  el.style.background='var(--bg3)'; el.style.color='var(--text)';
+  ['ct-analyse','ct-idees','ct-ajouter'].forEach(id => { const d=document.getElementById(id); if(d) d.style.display=id===tabId?'block':'none'; });
+}
+
+function filterIdees(el, type) {
+  el.closest('div').querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.idee-card').forEach(card => {
+    const show = type==='all' || (type==='mine'&&card.dataset.source==='mine') || (type==='ia'&&card.dataset.source==='ia') || card.dataset.funnel===type;
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+function ajouterIdee() {
+  const titre = document.getElementById('idee-titre').value.trim();
+  const reflexion = document.getElementById('idee-reflexion').value.trim();
+  const funnelSel = document.getElementById('idee-funnel').value;
+  if (!titre) { document.getElementById('idee-titre').style.borderColor='var(--danger)'; return; }
+  let funnel = funnelSel;
+  if (funnel==='auto') {
+    const t=(titre+' '+reflexion).toLowerCase();
+    if (t.includes('témoignage')||t.includes('résultat')||t.includes('client')||t.includes('preuve')||t.includes('histoire')) funnel='bofu';
+    else if (t.includes('objectio')||t.includes('peur')||t.includes('comment')||t.includes('pourquoi')||t.includes('erreur')||t.includes('coût')||t.includes('investir')) funnel='mofu';
+    else funnel='tofu';
+  }
+  const labels={tofu:{label:'TOFU',color:'var(--accent3)',bg:'rgba(0,229,192,0.1)',desc:'Contenu d\'attraction — visibilité auprès de l\'avatar froid ou tiède.'},mofu:{label:'MOFU',color:'var(--warn)',bg:'rgba(255,184,77,0.1)',desc:'Contenu d\'éducation — lève les croyances et objections des prospects chauds.'},bofu:{label:'BOFU',color:'var(--accent2)',bg:'rgba(255,107,157,0.1)',desc:'Contenu de conversion — témoignages, preuves, différenciation directe.'}};
+  const f=labels[funnel];
+  document.getElementById('idee-preview-content').innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="background:${f.bg};color:${f.color};font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px">${f.label}</span><strong>${titre}</strong></div><div style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:10px">${f.desc}</div><div style="display:flex;gap:8px"><button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="confirmerIdee('${funnel}')">✓ Confirmer & ajouter</button><button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="document.getElementById('idee-preview').style.display='none'">Annuler</button></div>`;
+  document.getElementById('idee-preview').style.display='block';
+}
+
+function confirmerIdee(funnel) {
+  const titre=document.getElementById('idee-titre').value.trim();
+  const reflexion=document.getElementById('idee-reflexion').value.trim();
+  const format=document.getElementById('idee-format').value||'Format libre';
+  const auteur=document.querySelector('input[name="auteur"]:checked').value;
+  const colors={tofu:{color:'var(--accent3)',bg:'rgba(0,229,192,0.1)',border:'var(--accent3)',label:'TOFU'},mofu:{color:'var(--warn)',bg:'rgba(255,184,77,0.1)',border:'var(--warn)',label:'MOFU'},bofu:{color:'var(--accent2)',bg:'rgba(255,107,157,0.1)',border:'var(--accent2)',label:'BOFU'}};
+  const f=colors[funnel];
+  const card=document.createElement('div');
+  card.className='idee-card'; card.dataset.funnel=funnel; card.dataset.source=auteur==='moi'?'mine':'setteuse';
+  card.style.cssText=`background:var(--bg2);border:1px solid var(--border);border-left:3px solid ${f.border};border-radius:var(--radius);padding:16px 20px;margin-bottom:0`;
+  card.innerHTML=`<div style="display:flex;align-items:flex-start;gap:12px"><div style="display:flex;flex-direction:column;gap:6px;align-items:center;min-width:56px"><span style="background:${f.bg};color:${f.color};font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px">${f.label}</span><span style="font-size:10px;color:var(--accent);font-family:'DM Mono',monospace">${auteur==='moi'?'Moi':'Setteuse'}</span></div><div style="flex:1"><div style="font-weight:600;font-size:14px;margin-bottom:4px">"${titre}"</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">${format}</div>${reflexion?`<div style="font-size:12px;color:var(--text);line-height:1.6;background:var(--bg3);border-radius:var(--radius-sm);padding:10px;border:1px solid var(--border)"><strong style="color:${f.color};font-size:11px">Réflexion :</strong><br>${reflexion}</div>`:''}</div><div style="min-width:80px;text-align:right"><button class="btn btn-ghost" style="font-size:11px;padding:4px 10px">→ Planifier</button></div></div>`;
+  document.getElementById('idees-grid').prepend(card);
+  document.getElementById('idee-preview').style.display='none';
+  document.getElementById('idee-titre').value='';
+  document.getElementById('idee-reflexion').value='';
+  const ctabs=document.querySelectorAll('.ctab');
+  switchCtab(ctabs[1],'ct-idees');
+  ctabs.forEach((t,i)=>{ t.style.background=i===1?'var(--bg3)':'transparent'; t.style.color=i===1?'var(--text)':'var(--muted)'; });
+}
+
+// Script DM modal
+const SCRIPTS = {
+  amorce: {
+    step: 'Étape 1 — Amorce',
+    title: 'Premier contact',
+    body: `
+      <div style="margin-bottom:16px;background:rgba(0,229,192,0.06);border:1px solid rgba(0,229,192,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--accent3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Variante A · Active (meilleure)</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--text);">Bonjour <em style="color:var(--accent)">{Prénom}</em>,<br><br>Tu fais du coaching / de la formation depuis combien de temps ?</div>
+        <button onclick="copyText('Bonjour {Prénom},\\n\\nTu fais du coaching / de la formation depuis combien de temps ?')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+      </div>
+      <div style="margin-bottom:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;opacity:0.65;">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Variante B · En test</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--muted);">Bonjour <em>{Prénom}</em>,<br><br>J'ai vu ton profil et ton contenu — tu es dans le coaching depuis longtemps ?</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px;">💡 Objectif : briser la glace. Ne pas pitcher. Attendre la réponse avant de passer à l'étape 2.</div>`
+  },
+  calculateur: {
+    step: 'Étape 2 — Transition',
+    title: 'Pitcher le calculateur',
+    body: `
+      <div style="margin-bottom:16px;background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--warn);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Après sa réponse</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--text);">Au fait, j'ai développé un <strong>outil gratuit</strong> qui permet de calculer exactement quel CA tu perds chaque mois à cause de mauvaises stratégies qu'on ne t'enseigne pas — et surtout quelles actions mettre en place pour le récupérer.<br><br>Je cherche à prendre un maximum de feedbacks dessus. Tu serais OK de l'essayer ?</div>
+        <button onclick="copyText('Au fait, j ai développé un outil gratuit qui permet de calculer exactement quel CA tu perds chaque mois à cause de mauvaises stratégies...')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+      </div>
+      <div style="font-size:12px;color:var(--warn);background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.15);border-radius:8px;padding:10px;">⚠️ Attendre le feu vert avant d'envoyer le lien. Ne pas l'envoyer en même temps que ce message.</div>`
+  },
+  audit: {
+    step: 'Étape 3 — Lien audit',
+    title: 'Envoi du lien',
+    body: `
+      <div style="margin-bottom:16px;background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--success);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Après feu vert uniquement</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--text);">Voilà le lien : <span style="color:var(--accent)">https://anoucktbze.github.io/auditsaleserf/?src=1</span><br><br>Ça prend 60 secondes, 3 chiffres à rentrer. Dis-moi ce que tu en penses.</div>
+        <button onclick="copyText('Voilà le lien : https://anoucktbze.github.io/auditsaleserf/?src=1\\n\\nÇa prend 60 secondes, 3 chiffres à rentrer. Dis-moi ce que tu en penses.')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);">💡 Si le prospect optin sur l'audit, sa fiche CRM se met à jour automatiquement. Pas besoin de recréer.</div>`
+  },
+  qualification: {
+    step: 'Étape 4 — Qualification',
+    title: 'Questions business',
+    body: `
+      <div style="margin-bottom:12px;background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Après qu'il a vu le résultat</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--text);">J'ai vu que tu as déjà une audience et des clients actifs. Tu fais combien de calls de vente par mois en ce moment à peu près ?</div>
+        <button onclick="copyText('J ai vu que tu as déjà une audience et des clients actifs. Tu fais combien de calls de vente par mois en ce moment à peu près ?')" style="margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+      </div>
+      <div style="margin-bottom:16px;background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:14px;line-height:1.8;color:var(--text);">Et tu sais d'où viennent tes meilleurs clients actuellement ?</div>
+        <button onclick="copyText('Et tu sais d où viennent tes meilleurs clients actuellement ?')" style="margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);background:var(--bg3);border-radius:8px;padding:10px;">💡 Ces deux questions révèlent si le prospect pilote son business aux chiffres ou à l'instinct — info clé pour la passation closer.</div>`
+  },
+  cta: {
+    step: 'Étape 5 — CTA',
+    title: 'Proposer le call iClosed',
+    body: `
+      <div style="margin-bottom:16px;background:rgba(255,107,157,0.06);border:1px solid rgba(255,107,157,0.15);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Si profil qualifié (offre high-ticket, 10k+/mois)</div>
+        <div style="font-size:14px;line-height:1.8;color:var(--text);">Par rapport à tout ce que tu viens de me partager, je trouve qu'il serait bien plus pertinent que tu continues cette conversation avec Anouck directement. Elle pourra établir un plan d'action bien plus personnalisé à ta situation pour que tu puisses enfin en bénéficier concrètement.<br><br>Voilà son lien pour réserver un créneau : <span style="color:var(--accent)">https://app.iclosed.io/e/salesperf/call-salesperformance</span></div>
+        <button onclick="copyText('Par rapport à tout ce que tu viens de me partager, je trouve qu il serait bien plus pertinent que tu continues cette conversation avec Anouck directement...')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:8px;padding:10px;">✓ Quand le prospect booke via iClosed, sa fiche CRM se met à jour automatiquement. Statut → Call booké. Récap IA généré.</div>`
+  }
+};
+
+function showScript(key) {
+  const s = SCRIPTS[key];
+  document.getElementById('smodal-step').textContent = s.step;
+  document.getElementById('smodal-title').textContent = s.title;
+  document.getElementById('smodal-body').innerHTML = s.body;
+  document.getElementById('script-modal').style.display = 'flex';
+}
+function closeScript(e) {
+  if (!e || e.target === document.getElementById('script-modal')) document.getElementById('script-modal').style.display = 'none';
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text).catch(()=>{});
+}
+function showAbTest() {
+  document.getElementById('smodal-step').textContent = 'A/B Test IA — Semaine 3';
+  document.getElementById('smodal-title').textContent = 'Résultats comparatifs';
+  document.getElementById('smodal-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:8px;padding:14px;">
+        <div style="font-size:11px;font-weight:600;color:var(--success);margin-bottom:8px;">Variante A · Gagnante</div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">"Tu fais du coaching depuis combien de temps ?"</div>
+        <div style="font-size:12px;color:var(--muted);">12 prospects · Taux réponse : <strong style="color:var(--success)">58%</strong></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;opacity:0.7;">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;">Variante B</div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">"J'ai vu ton profil et ton contenu..."</div>
+        <div style="font-size:12px;color:var(--muted);">12 prospects · Taux réponse : <strong>46%</strong></div>
+      </div>
+    </div>
+    <div style="background:rgba(124,111,255,0.07);border:1px solid rgba(124,111,255,0.15);border-radius:8px;padding:12px;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:500;color:var(--accent);margin-bottom:4px;">✦ Recommandation IA</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;">Variante A adoptée comme nouvelle référence. Prochain test : comparer 2 variantes de transition calculateur sur 20 prospects. IA sélectionnera les profils similaires pour un test homogène.</div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);">Prochaine itération dans 4 jours · 20 nouveaux prospects assignés automatiquement.</div>`;
+  document.getElementById('script-modal').style.display = 'flex';
+}
+
+// Filter pills prospects
+document.querySelectorAll('.filter
