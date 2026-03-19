@@ -688,11 +688,11 @@ body {
 
   <div class="nav-section">
     <div class="nav-label">CRM</div>
-    <div class="nav-item active" onclick="showView('prospects')">
+    <div class="nav-item active" data-view="prospects" onclick="window.showView('prospects', this)">
       <span class="nav-icon">👤</span> Prospects
       <span class="nav-badge">47</span>
     </div>
-    <div class="nav-item" onclick="showView('pipeline')">
+    <div class="nav-item" data-view="pipeline" onclick="window.showView('pipeline', this)">
       <span class="nav-icon">⚡</span> Pipeline
       <span class="nav-badge warn">8</span>
     </div>
@@ -700,21 +700,21 @@ body {
 
   <div class="nav-section" style="margin-top:8px">
     <div class="nav-label">Setting</div>
-    <div class="nav-item" onclick="showView('process')">
+    <div class="nav-item" data-view="process" onclick="window.showView('process', this)">
       <span class="nav-icon">📋</span> Process
     </div>
-    <div class="nav-item" onclick="showView('calls')">
+    <div class="nav-item" data-view="calls" onclick="window.showView('calls', this)">
       <span class="nav-icon">📞</span> Calls bookés
       <span class="nav-badge">3</span>
     </div>
-    <div class="nav-item" onclick="showView('commissions')">
+    <div class="nav-item" data-view="commissions" onclick="window.showView('commissions', this)">
       <span class="nav-icon">💰</span> Commissions
     </div>
   </div>
 
   <div class="nav-section" style="margin-top:8px">
     <div class="nav-label">Intelligence</div>
-    <div class="nav-item" onclick="showView('contenu')">
+    <div class="nav-item" data-view="contenu" onclick="window.showView('contenu', this)">
       <span class="nav-icon">💡</span> Contenu IA
     </div>
   </div>
@@ -2061,31 +2061,34 @@ body {
 </div>
 
 <script>
-function showView(id) {
+window.showView = function(id, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('view-' + id).classList.add('active');
-  const titles = { prospects:'Prospects', pipeline:'Pipeline', process:'Process Setting', calls:'Calls Bookés', commissions:'Commissions', contenu:'Contenu IA' };
+  var view = document.getElementById('view-' + id);
+  if (view) view.classList.add('active');
+  var titles = { prospects:'Prospects', pipeline:'Pipeline', process:'Process Setting', calls:'Calls Bookés', commissions:'Commissions', contenu:'Contenu IA' };
   document.getElementById('page-title').textContent = titles[id] || id;
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
 }
 
-function showFiche(type) { document.getElementById('fiche-overlay').classList.add('open'); }
-function closeFiche(e) { if (!e || e.target === document.getElementById('fiche-overlay')) document.getElementById('fiche-overlay').classList.remove('open'); }
 
-function switchTab(el, tabId) {
+
+window.showFiche = function(type) { document.getElementById('fiche-overlay').classList.add('open'); }
+window.closeFiche = function(e) { if (!e || e.target === document.getElementById('fiche-overlay')) document.getElementById('fiche-overlay').classList.remove('open'); }
+
+window.switchTab = function(el, tabId) {
   document.querySelectorAll('.fiche-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   ['tab-infos','tab-process','tab-messages','tab-ia'].forEach(t => { const d = document.getElementById(t); if (d) d.style.display = t === tabId ? 'block' : 'none'; });
 }
 
-function switchCtab(el, tabId) {
+window.switchCtab = function(el, tabId) {
   document.querySelectorAll('.ctab').forEach(t => { t.style.background='transparent'; t.style.color='var(--muted)'; });
   el.style.background='var(--bg3)'; el.style.color='var(--text)';
   ['ct-analyse','ct-idees','ct-ajouter'].forEach(id => { const d=document.getElementById(id); if(d) d.style.display=id===tabId?'block':'none'; });
 }
 
-function filterIdees(el, type) {
+window.filterIdees = function(el, type) {
   el.closest('div').querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('.idee-card').forEach(card => {
@@ -2094,7 +2097,7 @@ function filterIdees(el, type) {
   });
 }
 
-function ajouterIdee() {
+window.ajouterIdee = function() {
   const titre = document.getElementById('idee-titre').value.trim();
   const reflexion = document.getElementById('idee-reflexion').value.trim();
   const funnelSel = document.getElementById('idee-funnel').value;
@@ -2112,7 +2115,7 @@ function ajouterIdee() {
   document.getElementById('idee-preview').style.display='block';
 }
 
-function confirmerIdee(funnel) {
+window.confirmerIdee = function(funnel) {
   const titre=document.getElementById('idee-titre').value.trim();
   const reflexion=document.getElementById('idee-reflexion').value.trim();
   const format=document.getElementById('idee-format').value||'Format libre';
@@ -2199,20 +2202,20 @@ const SCRIPTS = {
   }
 };
 
-function showScript(key) {
+window.showScript = function(key) {
   const s = SCRIPTS[key];
   document.getElementById('smodal-step').textContent = s.step;
   document.getElementById('smodal-title').textContent = s.title;
   document.getElementById('smodal-body').innerHTML = s.body;
   document.getElementById('script-modal').style.display = 'flex';
 }
-function closeScript(e) {
+window.closeScript = function(e) {
   if (!e || e.target === document.getElementById('script-modal')) document.getElementById('script-modal').style.display = 'none';
 }
-function copyText(text) {
+window.copyText = function(text) {
   navigator.clipboard.writeText(text).catch(()=>{});
 }
-function showAbTest() {
+window.showAbTest = function() {
   document.getElementById('smodal-step').textContent = 'A/B Test IA — Semaine 3';
   document.getElementById('smodal-title').textContent = 'Résultats comparatifs';
   document.getElementById('smodal-body').innerHTML = `
@@ -2238,3 +2241,15 @@ function showAbTest() {
 
 // Filter pills prospects
 document.querySelectorAll('.filter
+-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    const parent = this.closest('.filters');
+    if (parent) {
+      parent.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
