@@ -738,7 +738,7 @@ body {
       <span>🔍</span>
       <input type="text" placeholder="Rechercher un prospect...">
     </div>
-    <button class="btn btn-ghost" onclick="showFiche()">+ Ajouter via lien Insta</button>
+    <button class="btn btn-ghost" onclick="window.showFiche()">+ Ajouter via lien Insta</button>
     <button class="btn btn-primary">↓ Importer</button>
   </div>
 
@@ -797,7 +797,7 @@ body {
           </tr>
         </thead>
         <tbody>
-          <tr onclick="showFiche('sarah')">
+          <tr onclick="window.showFiche('sarah')">
             <td>
               <div class="prospect-info">
                 <div class="prospect-avatar">SL</div>
@@ -818,7 +818,7 @@ body {
             <td><span class="relance-tag urgent">⚡ Aujourd'hui</span></td>
             <td style="color:var(--muted);font-size:12px">Coaching féminin</td>
           </tr>
-          <tr onclick="showFiche('marc')">
+          <tr onclick="window.showFiche('marc')">
             <td>
               <div class="prospect-info">
                 <div class="prospect-avatar" style="background:linear-gradient(135deg,#00e5c0,#7c6fff)">MD</div>
@@ -839,7 +839,7 @@ body {
             <td><span class="relance-tag soon">📅 Demain</span></td>
             <td style="color:var(--muted);font-size:12px">Fitness & nutrition</td>
           </tr>
-          <tr onclick="showFiche()">
+          <tr onclick="window.showFiche()">
             <td>
               <div class="prospect-info">
                 <div class="prospect-avatar" style="background:linear-gradient(135deg,#ffb84d,#ff6b9d)">JM</div>
@@ -860,7 +860,7 @@ body {
             <td><span class="relance-tag">📅 J+5 (24 juin)</span></td>
             <td style="color:var(--muted);font-size:12px">Mindset & business</td>
           </tr>
-          <tr onclick="showFiche()">
+          <tr onclick="window.showFiche()">
             <td>
               <div class="prospect-info">
                 <div class="prospect-avatar" style="background:linear-gradient(135deg,#00e5a0,#7c6fff)">AT</div>
@@ -881,7 +881,7 @@ body {
             <td><span class="relance-tag" style="color:var(--success)">✅ Call 25 juin 14h</span></td>
             <td style="color:var(--muted);font-size:12px">E-commerce</td>
           </tr>
-          <tr onclick="showFiche()">
+          <tr onclick="window.showFiche()">
             <td>
               <div class="prospect-info">
                 <div class="prospect-avatar" style="background:linear-gradient(135deg,#7c6fff,#00e5c0)">CL</div>
@@ -902,7 +902,7 @@ body {
             <td><span class="relance-tag">📅 J+1 (demain)</span></td>
             <td style="color:var(--muted);font-size:12px">Bien-être</td>
           </tr>
-          <tr onclick="showFiche()">
+          <tr onclick="window.showFiche()">
             <td>
               <div class="prospect-info">
                 <div class="prospect-avatar" style="background:linear-gradient(135deg,#ff6b9d,#ffb84d)">RB</div>
@@ -952,12 +952,12 @@ body {
         </div>
       </div>
       <!-- Script modal overlay -->
-      <div id="script-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;" onclick="closeScript(event)">
+      <div id="script-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;" onclick="window.closeScript(event)">
         <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);width:520px;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
           <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">
             <div id="smodal-step" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--accent);text-transform:uppercase"></div>
             <div id="smodal-title" style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;flex:1"></div>
-            <div onclick="closeScript()" style="cursor:pointer;color:var(--muted);font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg3);">✕</div>
+            <div onclick="window.closeScript()" style="cursor:pointer;color:var(--muted);font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg3);">✕</div>
           </div>
           <div id="smodal-body" style="padding:20px 24px;"></div>
         </div>
@@ -968,7 +968,7 @@ body {
         <span style="font-size:13px;font-weight:500;color:var(--accent)">✦ A/B Test actif</span>
         <span style="font-size:12px;color:var(--muted)">Semaine 3 · Amorce A vs B · 24 prospects · Résultat dans <span style="color:var(--warn);font-weight:500">4 jours</span></span>
         <span style="margin-left:auto;background:rgba(0,229,160,0.1);color:var(--success);font-size:11px;padding:3px 10px;border-radius:4px;font-family:'DM Mono',monospace">Variante A +12% réponse</span>
-        <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px;" onclick="showAbTest()">Voir détails</button>
+        <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px;" onclick="window.showAbTest()">Voir détails</button>
       </div>
 
       <!-- Kanban process SPB -->
@@ -985,7 +985,7 @@ body {
             IA analyse · score cible auto
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#7c6fff,#00e5c0)">CL</div>
                 <div><div class="kcard-name">Clara Leroy</div><div class="kcard-handle">@clara.wellness</div></div>
@@ -999,7 +999,7 @@ body {
                 <span class="kcard-score-mini med">32/100</span>
               </div>
             </div>
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#ff6b9d,#ffb84d)">PM</div>
                 <div><div class="kcard-name">Pierre M.</div><div class="kcard-handle">@pierrem.coach</div></div>
@@ -1025,10 +1025,10 @@ body {
           </div>
           <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
             <span>"Bonjour {Prénom}, tu fais...</span>
-            <span onclick="showScript('amorce')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+            <span onclick="window.showScript('amorce')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche('marc')">
+            <div class="kanban-card" onclick="window.showFiche('marc')">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#00e5c0,#7c6fff)">MD</div>
                 <div><div class="kcard-name">Marc Dubois</div><div class="kcard-handle">@marcdubois.fit</div></div>
@@ -1040,7 +1040,7 @@ body {
                 <span class="kcard-score-mini">72/100</span>
               </div>
             </div>
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#ff6b9d,#7c6fff)">LB</div>
                 <div><div class="kcard-name">Léa Bonnet</div><div class="kcard-handle">@leacoach.fr</div></div>
@@ -1064,10 +1064,10 @@ body {
           </div>
           <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
             <span>Attendre feu vert avant lien</span>
-            <span onclick="showScript('calculateur')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+            <span onclick="window.showScript('calculateur')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#ffb84d,#ff6b9d)">JM</div>
                 <div><div class="kcard-name">Julie Martin</div><div class="kcard-handle">@juliecoach.life</div></div>
@@ -1091,10 +1091,10 @@ body {
           </div>
           <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
             <span>Lien audit · attend résultat</span>
-            <span onclick="showScript('audit')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+            <span onclick="window.showScript('audit')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche('sarah')">
+            <div class="kanban-card" onclick="window.showFiche('sarah')">
               <div class="kcard-top">
                 <div class="kcard-avatar">SL</div>
                 <div><div class="kcard-name">Sarah Lambert</div><div class="kcard-handle">@sarahlambert.coach</div></div>
@@ -1106,7 +1106,7 @@ body {
                 <span class="kcard-score-mini">88/100</span>
               </div>
             </div>
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#00e5a0,#7c6fff)">AT</div>
                 <div><div class="kcard-name">Alex Tran</div><div class="kcard-handle">@alextran.ent</div></div>
@@ -1130,10 +1130,10 @@ body {
           </div>
           <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
             <span>Calls/mois · source clients</span>
-            <span onclick="showScript('qualification')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+            <span onclick="window.showScript('qualification')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#7c6fff,#ff6b9d)">RB</div>
                 <div><div class="kcard-name">Romain B.</div><div class="kcard-handle">@romainb.agency</div></div>
@@ -1157,10 +1157,10 @@ body {
           </div>
           <div style="padding:6px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px;">
             <span>Lien iClosed envoyé</span>
-            <span onclick="showScript('cta')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
+            <span onclick="window.showScript('cta')" style="color:var(--accent);cursor:pointer;margin-left:auto;">voir →</span>
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#ff6b9d,#ffb84d)">NF</div>
                 <div><div class="kcard-name">Noé Faure</div><div class="kcard-handle">@noe.scale</div></div>
@@ -1186,7 +1186,7 @@ body {
             iClosed sync · récap IA auto
           </div>
           <div class="kanban-cards">
-            <div class="kanban-card" onclick="showFiche()">
+            <div class="kanban-card" onclick="window.showFiche()">
               <div class="kcard-top">
                 <div class="kcard-avatar" style="background:linear-gradient(135deg,#00e5a0,#7c6fff)">AT</div>
                 <div><div class="kcard-name">Alex Tran</div><div class="kcard-handle">@alextran.ent</div></div>
@@ -1547,9 +1547,9 @@ body {
 
       <!-- Tabs contenu -->
       <div style="display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;width:fit-content;margin-bottom:20px">
-        <div class="ctab active" onclick="switchCtab(this,'ct-analyse')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg3);color:var(--text)">✦ Analyse IA</div>
-        <div class="ctab" onclick="switchCtab(this,'ct-idees')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)">💡 Banque d'idées</div>
-        <div class="ctab" onclick="switchCtab(this,'ct-ajouter')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)">+ Ajouter une idée</div>
+        <div class="ctab active" onclick="window.switchCtab(this,'ct-analyse')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg3);color:var(--text)">✦ Analyse IA</div>
+        <div class="ctab" onclick="window.switchCtab(this,'ct-idees')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)">💡 Banque d'idées</div>
+        <div class="ctab" onclick="window.switchCtab(this,'ct-ajouter')" style="padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)">+ Ajouter une idée</div>
       </div>
 
       <!-- TAB: ANALYSE IA -->
@@ -1638,13 +1638,13 @@ body {
 
         <!-- Filtres funnel -->
         <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
-          <button class="filter-pill active" onclick="filterIdees(this,'all')">Toutes (11)</button>
-          <button class="filter-pill" onclick="filterIdees(this,'tofu')" style="border-color:rgba(0,229,192,0.3);color:var(--accent3)">TOFU · Attirer (4)</button>
-          <button class="filter-pill" onclick="filterIdees(this,'mofu')" style="border-color:rgba(255,184,77,0.3);color:var(--warn)">MOFU · Éduquer (4)</button>
-          <button class="filter-pill" onclick="filterIdees(this,'bofu')" style="border-color:rgba(255,107,157,0.3);color:var(--accent2)">BOFU · Convertir (3)</button>
+          <button class="filter-pill active" onclick="window.filterIdees(this,'all')">Toutes (11)</button>
+          <button class="filter-pill" onclick="window.filterIdees(this,'tofu')" style="border-color:rgba(0,229,192,0.3);color:var(--accent3)">TOFU · Attirer (4)</button>
+          <button class="filter-pill" onclick="window.filterIdees(this,'mofu')" style="border-color:rgba(255,184,77,0.3);color:var(--warn)">MOFU · Éduquer (4)</button>
+          <button class="filter-pill" onclick="window.filterIdees(this,'bofu')" style="border-color:rgba(255,107,157,0.3);color:var(--accent2)">BOFU · Convertir (3)</button>
           <div style="margin-left:auto;display:flex;gap:6px">
-            <button class="filter-pill" onclick="filterIdees(this,'mine')" style="border-color:rgba(124,111,255,0.3);color:var(--accent)">Les miennes</button>
-            <button class="filter-pill" onclick="filterIdees(this,'ia')">✦ Générées IA</button>
+            <button class="filter-pill" onclick="window.filterIdees(this,'mine')" style="border-color:rgba(124,111,255,0.3);color:var(--accent)">Les miennes</button>
+            <button class="filter-pill" onclick="window.filterIdees(this,'ia')">✦ Générées IA</button>
           </div>
         </div>
 
@@ -1857,7 +1857,7 @@ body {
               </div>
             </div>
 
-            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="ajouterIdee()">✦ Analyser & Ajouter à la banque</button>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="window.ajouterIdee()">✦ Analyser & Ajouter à la banque</button>
           </div>
         </div>
 
@@ -1874,7 +1874,7 @@ body {
 </div>
 
 <!-- ── FICHE PROSPECT OVERLAY ── -->
-<div class="fiche-overlay" id="fiche-overlay" onclick="closeFiche(event)">
+<div class="fiche-overlay" id="fiche-overlay" onclick="window.closeFiche(event)">
   <div class="fiche-panel" onclick="event.stopPropagation()">
     <div class="fiche-header">
       <div class="fiche-avatar">SL</div>
@@ -1887,14 +1887,14 @@ body {
           <span class="tag tag-audit">Audit optin</span>
         </div>
       </div>
-      <div class="fiche-close" onclick="closeFiche()">✕</div>
+      <div class="fiche-close" onclick="window.closeFiche()">✕</div>
     </div>
     <div class="fiche-body">
       <div class="fiche-tabs">
-        <div class="fiche-tab active" onclick="switchTab(this,'tab-infos')">Infos</div>
-        <div class="fiche-tab" onclick="switchTab(this,'tab-process')">Process</div>
-        <div class="fiche-tab" onclick="switchTab(this,'tab-messages')">Messages</div>
-        <div class="fiche-tab" onclick="switchTab(this,'tab-ia')">IA Avatar</div>
+        <div class="fiche-tab active" onclick="window.switchTab(this,'tab-infos')">Infos</div>
+        <div class="fiche-tab" onclick="window.switchTab(this,'tab-process')">Process</div>
+        <div class="fiche-tab" onclick="window.switchTab(this,'tab-messages')">Messages</div>
+        <div class="fiche-tab" onclick="window.switchTab(this,'tab-ia')">IA Avatar</div>
       </div>
 
       <!-- TAB: INFOS -->
@@ -2111,7 +2111,7 @@ window.ajouterIdee = function() {
   }
   const labels={tofu:{label:'TOFU',color:'var(--accent3)',bg:'rgba(0,229,192,0.1)',desc:'Contenu d\'attraction — visibilité auprès de l\'avatar froid ou tiède.'},mofu:{label:'MOFU',color:'var(--warn)',bg:'rgba(255,184,77,0.1)',desc:'Contenu d\'éducation — lève les croyances et objections des prospects chauds.'},bofu:{label:'BOFU',color:'var(--accent2)',bg:'rgba(255,107,157,0.1)',desc:'Contenu de conversion — témoignages, preuves, différenciation directe.'}};
   const f=labels[funnel];
-  document.getElementById('idee-preview-content').innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="background:${f.bg};color:${f.color};font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px">${f.label}</span><strong>${titre}</strong></div><div style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:10px">${f.desc}</div><div style="display:flex;gap:8px"><button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="confirmerIdee('${funnel}')">✓ Confirmer & ajouter</button><button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="document.getElementById('idee-preview').style.display='none'">Annuler</button></div>`;
+  document.getElementById('idee-preview-content').innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="background:${f.bg};color:${f.color};font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px">${f.label}</span><strong>${titre}</strong></div><div style="color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:10px">${f.desc}</div><div style="display:flex;gap:8px"><button class="btn btn-primary" style="font-size:12px;padding:6px 14px" onclick="window.confirmerIdee('${funnel}')">✓ Confirmer & ajouter</button><button class="btn btn-ghost" style="font-size:12px;padding:6px 14px" onclick="document.getElementById('idee-preview').style.display='none'">Annuler</button></div>`;
   document.getElementById('idee-preview').style.display='block';
 }
 
@@ -2131,7 +2131,7 @@ window.confirmerIdee = function(funnel) {
   document.getElementById('idee-titre').value='';
   document.getElementById('idee-reflexion').value='';
   const ctabs=document.querySelectorAll('.ctab');
-  switchCtab(ctabs[1],'ct-idees');
+  window.switchCtab(ctabs[1],'ct-idees');
   ctabs.forEach((t,i)=>{ t.style.background=i===1?'var(--bg3)':'transparent'; t.style.color=i===1?'var(--text)':'var(--muted)'; });
 }
 
@@ -2144,7 +2144,7 @@ const SCRIPTS = {
       <div style="margin-bottom:16px;background:rgba(0,229,192,0.06);border:1px solid rgba(0,229,192,0.15);border-radius:8px;padding:14px;">
         <div style="font-size:11px;font-weight:600;color:var(--accent3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Variante A · Active (meilleure)</div>
         <div style="font-size:14px;line-height:1.8;color:var(--text);">Bonjour <em style="color:var(--accent)">{Prénom}</em>,<br><br>Tu fais du coaching / de la formation depuis combien de temps ?</div>
-        <button onclick="copyText('Bonjour {Prénom},\\n\\nTu fais du coaching / de la formation depuis combien de temps ?')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+        <button onclick="window.copyText('Bonjour {Prénom},\\n\\nTu fais du coaching / de la formation depuis combien de temps ?')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
       </div>
       <div style="margin-bottom:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;opacity:0.65;">
         <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Variante B · En test</div>
@@ -2159,7 +2159,7 @@ const SCRIPTS = {
       <div style="margin-bottom:16px;background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.15);border-radius:8px;padding:14px;">
         <div style="font-size:11px;font-weight:600;color:var(--warn);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Après sa réponse</div>
         <div style="font-size:14px;line-height:1.8;color:var(--text);">Au fait, j'ai développé un <strong>outil gratuit</strong> qui permet de calculer exactement quel CA tu perds chaque mois à cause de mauvaises stratégies qu'on ne t'enseigne pas — et surtout quelles actions mettre en place pour le récupérer.<br><br>Je cherche à prendre un maximum de feedbacks dessus. Tu serais OK de l'essayer ?</div>
-        <button onclick="copyText('Au fait, j ai développé un outil gratuit qui permet de calculer exactement quel CA tu perds chaque mois à cause de mauvaises stratégies...')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+        <button onclick="window.copyText('Au fait, j ai développé un outil gratuit qui permet de calculer exactement quel CA tu perds chaque mois à cause de mauvaises stratégies...')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
       </div>
       <div style="font-size:12px;color:var(--warn);background:rgba(255,184,77,0.06);border:1px solid rgba(255,184,77,0.15);border-radius:8px;padding:10px;">⚠️ Attendre le feu vert avant d'envoyer le lien. Ne pas l'envoyer en même temps que ce message.</div>`
   },
@@ -2170,7 +2170,7 @@ const SCRIPTS = {
       <div style="margin-bottom:16px;background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:8px;padding:14px;">
         <div style="font-size:11px;font-weight:600;color:var(--success);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Après feu vert uniquement</div>
         <div style="font-size:14px;line-height:1.8;color:var(--text);">Voilà le lien : <span style="color:var(--accent)">https://anoucktbze.github.io/auditsaleserf/?src=1</span><br><br>Ça prend 60 secondes, 3 chiffres à rentrer. Dis-moi ce que tu en penses.</div>
-        <button onclick="copyText('Voilà le lien : https://anoucktbze.github.io/auditsaleserf/?src=1\\n\\nÇa prend 60 secondes, 3 chiffres à rentrer. Dis-moi ce que tu en penses.')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+        <button onclick="window.copyText('Voilà le lien : https://anoucktbze.github.io/auditsaleserf/?src=1\\n\\nÇa prend 60 secondes, 3 chiffres à rentrer. Dis-moi ce que tu en penses.')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
       </div>
       <div style="font-size:12px;color:var(--muted);">💡 Si le prospect optin sur l'audit, sa fiche CRM se met à jour automatiquement. Pas besoin de recréer.</div>`
   },
@@ -2181,11 +2181,11 @@ const SCRIPTS = {
       <div style="margin-bottom:12px;background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.15);border-radius:8px;padding:14px;">
         <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Après qu'il a vu le résultat</div>
         <div style="font-size:14px;line-height:1.8;color:var(--text);">J'ai vu que tu as déjà une audience et des clients actifs. Tu fais combien de calls de vente par mois en ce moment à peu près ?</div>
-        <button onclick="copyText('J ai vu que tu as déjà une audience et des clients actifs. Tu fais combien de calls de vente par mois en ce moment à peu près ?')" style="margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+        <button onclick="window.copyText('J ai vu que tu as déjà une audience et des clients actifs. Tu fais combien de calls de vente par mois en ce moment à peu près ?')" style="margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
       </div>
       <div style="margin-bottom:16px;background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.15);border-radius:8px;padding:14px;">
         <div style="font-size:14px;line-height:1.8;color:var(--text);">Et tu sais d'où viennent tes meilleurs clients actuellement ?</div>
-        <button onclick="copyText('Et tu sais d où viennent tes meilleurs clients actuellement ?')" style="margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+        <button onclick="window.copyText('Et tu sais d où viennent tes meilleurs clients actuellement ?')" style="margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
       </div>
       <div style="font-size:12px;color:var(--muted);background:var(--bg3);border-radius:8px;padding:10px;">💡 Ces deux questions révèlent si le prospect pilote son business aux chiffres ou à l'instinct — info clé pour la passation closer.</div>`
   },
@@ -2196,7 +2196,7 @@ const SCRIPTS = {
       <div style="margin-bottom:16px;background:rgba(255,107,157,0.06);border:1px solid rgba(255,107,157,0.15);border-radius:8px;padding:14px;">
         <div style="font-size:11px;font-weight:600;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Script — Si profil qualifié (offre high-ticket, 10k+/mois)</div>
         <div style="font-size:14px;line-height:1.8;color:var(--text);">Par rapport à tout ce que tu viens de me partager, je trouve qu'il serait bien plus pertinent que tu continues cette conversation avec Anouck directement. Elle pourra établir un plan d'action bien plus personnalisé à ta situation pour que tu puisses enfin en bénéficier concrètement.<br><br>Voilà son lien pour réserver un créneau : <span style="color:var(--accent)">https://app.iclosed.io/e/salesperf/call-salesperformance</span></div>
-        <button onclick="copyText('Par rapport à tout ce que tu viens de me partager, je trouve qu il serait bien plus pertinent que tu continues cette conversation avec Anouck directement...')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
+        <button onclick="window.copyText('Par rapport à tout ce que tu viens de me partager, je trouve qu il serait bien plus pertinent que tu continues cette conversation avec Anouck directement...')" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--text);font-size:11px;cursor:pointer;">Copier</button>
       </div>
       <div style="font-size:12px;color:var(--muted);background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:8px;padding:10px;">✓ Quand le prospect booke via iClosed, sa fiche CRM se met à jour automatiquement. Statut → Call booké. Récap IA généré.</div>`
   }
@@ -2240,8 +2240,7 @@ window.showAbTest = function() {
 }
 
 // Filter pills prospects
-document.querySelectorAll('.filter
--pill').forEach(pill => {
+document.querySelectorAll('.filter-pill').forEach(pill => {
   pill.addEventListener('click', function() {
     const parent = this.closest('.filters');
     if (parent) {
